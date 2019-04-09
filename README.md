@@ -1,5 +1,11 @@
 ##Memory Recall Game PWA TypeScript
 
+<img src="screenshots/loading.png" alt="V0.5 App Loading Screenshot" class="inline"/>
+<img src="screenshots/menu.png" alt="V0.5 Main Menu Screenshot" class="inline"/>
+<img src="screenshots/countdown.png" alt="V0.5 Countdown Screenshot" class="inline"/>
+<img src="screenshots/game.png" alt="V0.5 Game Screenshot" class="inline"/>
+
+
 # About
 Memory Recall is a fun and quick game which provides random sequences of items to remember and recall.
 
