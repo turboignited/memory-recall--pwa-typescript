@@ -1,0 +1,22 @@
+{
+    "sprites": {
+        "total": 10,
+        "all": [
+            {
+                "name": "numbers",
+                "urls": [
+                    "images/sprites/numbers-0.png",
+                    "images/sprites/numbers-1.png",
+                    "images/sprites/numbers-2.png",
+                    "images/sprites/numbers-3.png",
+                    "images/sprites/numbers-4.png",
+                    "images/sprites/numbers-5.png",
+                    "images/sprites/numbers-6.png",
+                    "images/sprites/numbers-7.png",
+                    "images/sprites/numbers-8.png",
+                    "images/sprites/numbers-9.png"
+                ]
+            }
+        ]
+    }
+}
