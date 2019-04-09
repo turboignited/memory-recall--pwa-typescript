@@ -1,4 +1,4 @@
-##Memory Recall Game PWA TypeScript
+# Memory Recall Game PWA TypeScript
 
 # About
 Memory Recall is a fun and quick game which provides random sequences of items to remember and recall.
