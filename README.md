@@ -1,4 +1,4 @@
-##Memory Recall Game PWA TypeScript
+# Memory Recall Game PWA TypeScript
 
 <img src="screenshots/loading.png" alt="V0.5 App Loading Screenshot" class="inline"/>
 <img src="screenshots/menu.png" alt="V0.5 Main Menu Screenshot" class="inline"/>
