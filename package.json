@@ -1,0 +1,45 @@
+{
+    "name": "memory-recall--pwa-typescript",
+    "version": "0.5.0",
+    "description": "The game tests your memory ability with a fun game and records your score against a global audience.",
+    "scripts": {
+        "start": "webpack-dev-server --config webpack.dev.js",
+        "build": "webpack --config webpack.prod.js",
+        "test": "jest --coverage --watchAll"
+    },
+    "keywords": [
+        "Memory",
+        "Recall",
+        "Canvas",
+        "2d",
+        "Game",
+        "PWA",
+        "TypeScript"
+    ],
+    "jest": {
+        "preset": "ts-jest",
+        "setupFiles": [
+            "jest-canvas-mock"
+        ],
+        "testEnvironment": "jsdom"
+    },
+    "author": "TurboIgnited",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "@babel/preset-typescript": "^7.3.3",
+        "@types/jest": "^24.0.11",
+        "@types/node": "^11.13.0",
+        "jest": "^24.7.1",
+        "jest-canvas-mock": "^2.0.0-beta.1",
+        "ts-jest": "^24.0.1",
+        "ts-loader": "^5.3.3",
+        "typescript": "^3.4.1",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0",
+        "webpack-dev-server": "^3.2.1",
+        "webpack-merge": "^4.2.1",
+        "workbox-webpack-plugin": "^4.2.0"
+    }
+}
