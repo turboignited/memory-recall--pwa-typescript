@@ -17,12 +17,6 @@ export class LoadingView extends View {
         }
     }
 
-    public createUI(): HTMLDivElement {
-        const container = document.createElement("div");
-
-        return container;
-    }
-
     public render(context: CanvasRenderingContext2D): void {
 
         if (this.visible) {

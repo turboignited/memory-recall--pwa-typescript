@@ -65,7 +65,6 @@ export class App {
      */
     public setView(key: ViewType): void {
         this.hideActiveView();
-        this._activeView = key;
         this.showView(key);
         this.renderView(key);
     }

@@ -2,6 +2,7 @@ import { App } from "./app";
 import { Loader } from "./utils/loader";
 import { ViewType } from "./views/view_type";
 import { Statics } from "./statics";
+import { AppControls } from "./controls";
 
 
 const createApp = () => {
@@ -18,6 +19,7 @@ const createApp = () => {
     }
 
     const app = new App(context);
+    const controls = new AppControls(app);
     const loader: Loader<ViewType> = new Loader<ViewType>();
     const container = document.createElement("div");
 
@@ -27,7 +29,13 @@ const createApp = () => {
     container.style.display = "-ms-grid";
     container.style.margin = "0 auto";
 
-
+    controls.container.style.msGridColumn = "1";
+    controls.container.style.msGridRow = "1";
+    controls.container.style.gridColumn = "1";
+    controls.container.style.gridRow = "1";
+    controls.container.style.zIndex = "2";
+    controls.container.style.height = `${Statics.Dimensions.height * Statics.Dimensions.scale}px`;
+       
     canvas.style.boxShadow = "0 0 4px black";
     canvas.style.msGridColumn = "1";
     canvas.style.msGridRow = "1";
@@ -42,40 +50,25 @@ const createApp = () => {
 
     container.appendChild(canvas);
 
-
-    app.views.forEach((view) => {
-        const ui = view.ui.container;
-        ui.style.msGridColumn = "1";
-        ui.style.msGridRow = "1";
-        ui.style.gridColumn = "1";
-        ui.style.gridRow = "1";
-        ui.style.zIndex = "1";
-        ui.style.width = container.style.width;
-        ui.style.height = container.style.height;
-        ui.style.border = "1px solid blue";
-        container.appendChild(ui);
-    });
-
+    container.appendChild(controls.container);
 
     document.body.style.height = "100vh";
     document.body.style.fontFamily = "Arial";
     document.body.style.overflow = "hidden";
-    document.body.style.background = "linear-gradient(0deg,yellow,gray)";
+    document.body.style.background = "linear-gradient(0deg,gray,yellow)";
     document.body.appendChild(container);
-
     window.onresize = () => {
         Statics.Dimensions.updateScale(window.innerWidth - 20, window.innerHeight - 20);
-        container.style.width = `${Statics.Dimensions.width * Statics.Dimensions.scale}px`;
-        container.style.height = `${Statics.Dimensions.height * Statics.Dimensions.scale}px`;
+
+        const scale = Statics.Dimensions.scale;
+        const width = Statics.Dimensions.width;
+        const height = Statics.Dimensions.height;
+        container.style.width = `${width * scale}px`;
+        container.style.height = `${height * scale}px`;
+        controls.container.style.height = container.style.height;
+
         canvas.style.transformOrigin = "top left"; //scale from top left
-        canvas.style.transform = `scale(${Statics.Dimensions.scale})`;
-        app.views.forEach((view) => {
-            const ui = view.ui.container;
-            ui.style.width = container.style.width;
-            ui.style.height = container.style.height;
-            ui.style.border = "1px solid red";
-            
-        });
+        canvas.style.transform = `scale(${scale})`;
     };
 
 

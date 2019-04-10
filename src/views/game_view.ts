@@ -21,20 +21,6 @@ export class GameView extends View {
         }
     }
 
-    public createUI(app: App): HTMLDivElement {
-        const container = document.createElement("div");
-        const pauseButton = document.createElement("button");
-        pauseButton.innerText = "||";
-        pauseButton.addEventListener("click", () => {
-            if (this._game.state == GameState.Playing) {
-                this._game.pause();
-                app.setView(ViewType.Pause);
-            }
-        });
-        container.appendChild(pauseButton);
-        return container;
-    }
-
     public destroy(): void {
         super.destroy();
         this._game.quit();
@@ -59,6 +45,7 @@ export class GameView extends View {
     public render(context: CanvasRenderingContext2D): void {
         context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
         context.fillStyle = "blue";
+        context.globalAlpha=1;
         context.fillText("Starting", Statics.Dimensions.width * 0.5, Statics.Dimensions.height * 0.5);
         this._game.render(context);
     }

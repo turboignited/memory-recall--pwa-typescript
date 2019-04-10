@@ -120,7 +120,7 @@ export class GameLogic {
                 case LogicState.Reveal:
                     const sprite = this._activeSprites[this._changingSpriteIndex];
                     context.globalAlpha = sprite.alpha;
-                    context.drawImage(sprite.image, sprite.position.x, sprite.position.y);
+                    context.drawImage(sprite.image, sprite.position.x, sprite.position.y,this._sprites.spriteSize,this._sprites.spriteSize);
                     break;
                 case LogicState.Select:
 
