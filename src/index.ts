@@ -9,7 +9,7 @@ const createApp = () => {
 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-
+    const outerPadding: number = 20;
     if (context == null) {
         console.error("2d canvas context unavailable. Cannot continue.");
         document.body.appendChild(
@@ -25,7 +25,7 @@ const createApp = () => {
      * Design resolution is 16:9 (1280x720) with a GCD of 80 and sprite dimension of 80
      */
 
-    const app = new App(1280, 720, window.innerWidth - 20, window.innerHeight - 20, context);
+    const app = new App(1280, 720, window.innerWidth - outerPadding, window.innerHeight - outerPadding, context);
     const loader: Loader<ViewType> = new Loader<ViewType>();
     const container = document.createElement("div");
 
@@ -66,7 +66,7 @@ const createApp = () => {
 
     window.onresize = () => {
 
-        app.resize(window.innerWidth - 20, window.innerHeight - 20);
+        app.resize(window.innerWidth - outerPadding, window.innerHeight - outerPadding);
 
     };
 
