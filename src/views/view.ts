@@ -1,30 +1,24 @@
 import { Loader } from "../utils/loader";
 import { ViewType } from "./view_type";
 import { UI } from "./ui";
-import { Dimensions } from "../utils/dimensions";
 import { App } from "../app";
 
 export abstract class View {
     private _type: ViewType;
     private _visible: boolean;
-    private _ui!: UI;
-    private _dimensions: Dimensions;
+    private _ui: UI;
     public get visible(): boolean {
         return this._visible;
     }
     public get type(): ViewType {
         return this._type;
     }
-    public get dimensions(): Dimensions {
-        return this._dimensions;
-    }
     public get ui(): UI {
         return this._ui;
     }
     constructor(type: ViewType, app: App) {
         this._type = type;
-        this._dimensions = app.dimensions;
-        this._ui = new UI(this._dimensions, this.createUI(app));
+        this._ui = new UI(this.createUI(app));
         this._visible = false;
     }
     /**
@@ -40,10 +34,6 @@ export abstract class View {
         this._visible = true;
     }
 
-    public resize(dimensions: Dimensions): void {
-        this._dimensions = dimensions;
-        this._ui.update(dimensions);
-    }
     /**
      * Call to hide the HTML contents of this view
      */

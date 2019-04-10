@@ -5,13 +5,14 @@ import { App } from "../app";
 
 import { Game } from "../game/game";
 import { GameState } from "../game/game_state";
+import { Statics } from "../statics";
 
 export class GameView extends View {
-    private _game!: Game;
+    private _game: Game;
 
     constructor(type: ViewType, app: App) {
         super(type, app);
-        this._game = new Game(app.dimensions);
+        this._game = new Game();
     }
 
     public load(loader: Loader<ViewType>): void {
@@ -56,10 +57,9 @@ export class GameView extends View {
     }
 
     public render(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+        context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
         context.fillStyle = "blue";
-        context.fillText("Starting", this.dimensions.width * 0.5, this.dimensions.height * 0.5);
-        this._game.size = this.dimensions;
+        context.fillText("Starting", Statics.Dimensions.width * 0.5, Statics.Dimensions.height * 0.5);
         this._game.render(context);
     }
 }

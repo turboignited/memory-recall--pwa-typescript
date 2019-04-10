@@ -3,6 +3,7 @@ import { Loader } from "../utils/loader";
 import { ViewType } from "./view_type";
 import { App } from "../app";
 import { Preferences } from "../storage/preferences";
+import { Statics } from "../statics";
 
 
 export class MainMenuView extends View {
@@ -152,6 +153,6 @@ export class MainMenuView extends View {
 
 
     public render(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+        context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
     }
 }

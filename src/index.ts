@@ -1,15 +1,14 @@
 import { App } from "./app";
 import { Loader } from "./utils/loader";
 import { ViewType } from "./views/view_type";
+import { Statics } from "./statics";
+
 
 const createApp = () => {
     window.onload = null;
 
-
-
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-    const outerPadding: number = 20;
     if (context == null) {
         console.error("2d canvas context unavailable. Cannot continue.");
         document.body.appendChild(
@@ -18,29 +17,28 @@ const createApp = () => {
         return;
     }
 
-    /**
-     * Keep Width and Height the same to prevent maximum score being incorrectly 
-     * calculated
-     * Also ensure the dimensions have a GCD in line with sprite dimensions.
-     * Design resolution is 16:9 (1280x720) with a GCD of 80 and sprite dimension of 80
-     */
-
-    const app = new App(1280, 720, window.innerWidth - outerPadding, window.innerHeight - outerPadding, context);
+    const app = new App(context);
     const loader: Loader<ViewType> = new Loader<ViewType>();
     const container = document.createElement("div");
 
+    container.style.width = `${Statics.Dimensions.width * Statics.Dimensions.scale}px`;
+    container.style.height = `${Statics.Dimensions.height * Statics.Dimensions.scale}px`;
+    container.style.display = "grid";
+    container.style.display = "-ms-grid";
+    container.style.margin = "0 auto";
 
-    canvas.style.margin = "0 auto";
+
     canvas.style.boxShadow = "0 0 4px black";
     canvas.style.msGridColumn = "1";
     canvas.style.msGridRow = "1";
     canvas.style.gridColumn = "1";
     canvas.style.gridRow = "1";
     canvas.style.zIndex = "0";
-    container.style.margin = "0 auto";
-    container.style.height = "100vh";
-    container.style.display = "grid";
-    container.style.display = "-ms-grid";
+    canvas.style.transformOrigin = "top left"; //scale from top left
+    canvas.style.transform = `scale(${Statics.Dimensions.scale})`;
+
+    canvas.width = Statics.Dimensions.width;
+    canvas.height = Statics.Dimensions.height;
 
     container.appendChild(canvas);
 
@@ -51,23 +49,33 @@ const createApp = () => {
         ui.style.msGridRow = "1";
         ui.style.gridColumn = "1";
         ui.style.gridRow = "1";
-        ui.style.margin = "0 auto";
-        ui.style.zIndex = "0";
+        ui.style.zIndex = "1";
+        ui.style.width = container.style.width;
+        ui.style.height = container.style.height;
+        ui.style.border = "1px solid blue";
         container.appendChild(ui);
     });
 
 
-    document.body.style.margin = "0";
-    document.body.style.padding = "0";
+    document.body.style.height = "100vh";
     document.body.style.fontFamily = "Arial";
-    document.body.style.overflowY = "hidden";
+    document.body.style.overflow = "hidden";
     document.body.style.background = "linear-gradient(0deg,yellow,gray)";
     document.body.appendChild(container);
 
     window.onresize = () => {
-
-        app.resize(window.innerWidth - outerPadding, window.innerHeight - outerPadding);
-
+        Statics.Dimensions.updateScale(window.innerWidth - 20, window.innerHeight - 20);
+        container.style.width = `${Statics.Dimensions.width * Statics.Dimensions.scale}px`;
+        container.style.height = `${Statics.Dimensions.height * Statics.Dimensions.scale}px`;
+        canvas.style.transformOrigin = "top left"; //scale from top left
+        canvas.style.transform = `scale(${Statics.Dimensions.scale})`;
+        app.views.forEach((view) => {
+            const ui = view.ui.container;
+            ui.style.width = container.style.width;
+            ui.style.height = container.style.height;
+            ui.style.border = "1px solid red";
+            
+        });
     };
 
 

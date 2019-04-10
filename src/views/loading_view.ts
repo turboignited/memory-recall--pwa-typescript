@@ -1,6 +1,7 @@
 import { View } from "./view";
 import { Loader, LoadStatus } from "../utils/loader";
 import { ViewType } from "./view_type";
+import { Statics } from "../statics";
 
 
 export class LoadingView extends View {
@@ -26,20 +27,20 @@ export class LoadingView extends View {
 
         if (this.visible) {
 
-            context.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+            context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
             context.fillStyle = "green";
 
-            context.fillRect(0, this.dimensions.height - 100, this.dimensions.width, 100);
+            context.fillRect(0, Statics.Dimensions.height - 100, Statics.Dimensions.width, 100);
 
             context.fillStyle = "yellow";
 
-            context.fillRect(20, this.dimensions.height - 80, (this.dimensions.width - 40) * this._percentLoaded, 60);
+            context.fillRect(20, Statics.Dimensions.height - 80, (Statics.Dimensions.width - 40) * this._percentLoaded, 60);
 
 
             context.fillStyle = "black";
             context.font = "50px serif";
             context.textAlign = "center";
-            context.fillText(`${(this._percentLoaded * 100).toFixed(2)}%`, this.dimensions.centerPoint().x, this.dimensions.centerPoint().y, this.dimensions.width);
+            context.fillText(`${(this._percentLoaded * 100).toFixed(2)}%`, Statics.Dimensions.centerPoint().x, Statics.Dimensions.centerPoint().y, Statics.Dimensions.width);
 
             requestAnimationFrame((time: number) => {
                 this.render(context);

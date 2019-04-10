@@ -8,6 +8,7 @@ import { ViewType } from "../views/view_type";
 import { Sprite } from "./sprite";
 import { Point } from "../utils/point";
 import { SpriteTypes } from "../assets/sprite_types";
+import { Statics } from "../statics";
 
 
 export class Sprites {
@@ -21,14 +22,14 @@ export class Sprites {
         return this._sprites;
     }
 
-    constructor(size: Dimensions) {
-        this._spriteSize = Maths.GreatestCommonDivisor(size.width, size.height);
+    constructor() {
+        this._spriteSize = Maths.GreatestCommonDivisor(Statics.Dimensions.width, Statics.Dimensions.height);
         this._sprites = [];
     }
 
     public getRandomSprite(type: SpriteTypes): Sprite {
         const index = Math.floor(Math.random() * this._sprites[type].length);
-        const sprite = new Sprite(this._sprites[type][index].image,this._sprites[type][index].position);
+        const sprite = new Sprite(this._sprites[type][index].image, this._sprites[type][index].position);
         return sprite;
     }
     public getSprite(type: SpriteTypes, index: number): Sprite {

@@ -1,4 +1,3 @@
-import { Dimensions } from "../utils/dimensions";
 import { Sprites } from "./sprites";
 import { Loader } from "../utils/loader";
 import { ViewType } from "../views/view_type";
@@ -7,10 +6,12 @@ import { Score } from "../storage/score";
 import { SpriteTypes } from "../assets/sprite_types";
 import { Sprite } from "./sprite";
 import { Point } from "../utils/point";
+import { Statics } from "../statics";
 
 export class GameLogic {
     private _state: LogicState = LogicState.None;
-    private _size: Dimensions;
+    private _width: number = Statics.Dimensions.width;
+    private _height: number = Statics.Dimensions.height;
     private _positions: Point[];
     private _score: Score;
     private _renderedGrid: boolean = false;
@@ -23,17 +24,14 @@ export class GameLogic {
     private _shouldRender: boolean = true;
     private _shouldUpdate: boolean = true;
     private _spriteType: SpriteTypes = SpriteTypes.numbers;
-    public get size(): Dimensions {
-        return this._size;
-    }
 
-    constructor(size: Dimensions) {
-        this._size = size;
-        this._sprites = new Sprites(size);
+
+    constructor() {
+        this._sprites = new Sprites();
         this._score = new Score(
             2,
-            (this._size.width / this._sprites.spriteSize) *
-            (this._size.height / this._sprites.spriteSize)
+            (this._width / this._sprites.spriteSize) *
+            (this._height / this._sprites.spriteSize)
         );
         this._positions = [];
         this._activeSprites = [];
@@ -52,8 +50,8 @@ export class GameLogic {
     public generatePositions(): void {
         let availablePositions = [];
         const spriteSize = this._sprites.spriteSize;
-        for (let x = 0; x < this._size.width / this._sprites.spriteSize; x++) {
-            for (let y = 0; y < this._size.height / this._sprites.spriteSize; y++) {
+        for (let x = 0; x < this._width / this._sprites.spriteSize; x++) {
+            for (let y = 0; y < this._height / this._sprites.spriteSize; y++) {
                 availablePositions.push(new Point(x * spriteSize, y * spriteSize));
             }
         }
@@ -91,7 +89,6 @@ export class GameLogic {
                 case LogicState.Reveal:
                     if (!this._revealing) {
                         if (this._revealed == this._positions.length) {
-                            console.log("HI")
                             this._state = LogicState.Select;
                         } else {
                             this.fadeInNextSprite();
@@ -163,11 +160,11 @@ export class GameLogic {
     }
 
     public renderGrid(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, this._size.width, this._size.height);
+        context.clearRect(0, 0, this._width, this._height);
         context.strokeStyle = "black";
         const cellSize = this._sprites.spriteSize;
-        for (let x = 0; x < this._size.width / cellSize; x++) {
-            for (let y = 0; y < this._size.height / cellSize; y++) {
+        for (let x = 0; x < this._width / cellSize; x++) {
+            for (let y = 0; y < this._height / cellSize; y++) {
                 context.strokeRect(
                     x * cellSize,
                     y * cellSize,

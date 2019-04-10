@@ -1,8 +1,8 @@
-import { Dimensions } from "../utils/dimensions";
 import { Loader } from "../utils/loader";
 import { ViewType } from "../views/view_type";
 import { GameState } from "./game_state";
 import { GameLogic } from "./logic";
+import { Statics } from "../statics";
 
 export declare type CountdownCallback = (seconds: number) => void;
 export class Game {
@@ -10,15 +10,6 @@ export class Game {
     private _countdownInterval: number = 0;
     private _animationFrame: number = 0;
     private _logic: GameLogic;
-    private _size: Dimensions;
-
-    public get size(): Dimensions {
-        return this._size;
-    }
-
-    public set size(value: Dimensions) {
-        this._size = value;
-    }
 
     public get logic(): GameLogic {
         return this._logic;
@@ -36,9 +27,8 @@ export class Game {
         return this._animationFrame;
     }
 
-    constructor(size: Dimensions) {
-        this._size = size;
-        this._logic = new GameLogic(size);
+    constructor() {
+        this._logic = new GameLogic();
     }
 
     public load(loader: Loader<ViewType>, type: ViewType): void {
@@ -55,9 +45,9 @@ export class Game {
             });
         } else if (this._state == GameState.Countdown) {
             this.countdown(3, (seconds: number) => {
-                context.clearRect(0, 0, this._size.width, this._size.height);
+                context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
                 context.fillStyle = "black";
-                context.fillText(seconds.toString(), this._size.width * 0.5, this._size.height * 0.5);
+                context.fillText(seconds.toString(), Statics.Dimensions.width * 0.5, Statics.Dimensions.height * 0.5);
                 if (seconds == 0) {
                     this.render(context);
                 }
