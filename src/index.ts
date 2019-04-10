@@ -34,8 +34,8 @@ const createApp = () => {
     controls.container.style.gridColumn = "1";
     controls.container.style.gridRow = "1";
     controls.container.style.zIndex = "2";
-    controls.container.style.height = `${Statics.Dimensions.height * Statics.Dimensions.scale}px`;
-       
+    controls.container.style.width = `${Statics.Dimensions.width * Statics.Dimensions.scale}px`;
+
     canvas.style.boxShadow = "0 0 4px black";
     canvas.style.msGridColumn = "1";
     canvas.style.msGridRow = "1";
@@ -65,7 +65,7 @@ const createApp = () => {
         const height = Statics.Dimensions.height;
         container.style.width = `${width * scale}px`;
         container.style.height = `${height * scale}px`;
-        controls.container.style.height = container.style.height;
+        controls.container.style.width = container.style.width;
 
         canvas.style.transformOrigin = "top left"; //scale from top left
         canvas.style.transform = `scale(${scale})`;
