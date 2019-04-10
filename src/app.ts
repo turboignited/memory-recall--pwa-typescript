@@ -1,6 +1,5 @@
 import { Canvas } from "./render/canvas";
 import { View } from "./views/view";
-import { Dimensions } from "./utils/dimensions";
 import { MainMenuView } from "./views/main_menu_view";
 import { Loader } from "./utils/loader";
 import { ViewType } from "./views/view_type";
@@ -14,7 +13,6 @@ import { PauseView } from "./views/pause_view";
  */
 export class App {
     private _canvas: Canvas;
-    private _dimensions: Dimensions;
     private _views: Map<ViewType, View>;
     private _activeView!: ViewType;
 
@@ -29,13 +27,8 @@ export class App {
         return this._activeView;
     }
 
-    public get dimensions(): Dimensions {
-        return this._dimensions;
-    }
-
-    constructor(width: number, height: number, maxWidth: number, maxHeight: number, context: CanvasRenderingContext2D) {
-        this._dimensions = new Dimensions(width, height, maxWidth, maxHeight);
-        this._canvas = new Canvas(this._dimensions, context);
+    constructor(context: CanvasRenderingContext2D) {
+        this._canvas = new Canvas(context);
         this._views = new Map<ViewType, View>();
         this._views.set(ViewType.Load, new LoadingView(ViewType.Load, this));
         this._views.set(ViewType.Main, new MainMenuView(ViewType.Main, this));
@@ -65,15 +58,6 @@ export class App {
         });
     }
 
-    public resize(width: number, height: number): void {
-        this._dimensions.updateScale(width, height);
-        this._canvas.setDimensions(this._dimensions);
-        this._views.forEach((value) => {
-            value.resize(this._dimensions);
-        });
-        this.renderView(this._activeView);
-    }
-
     /**
      * Will hide current activeview before showing, rendering
      * and setting the specified view active
@@ -81,6 +65,7 @@ export class App {
      */
     public setView(key: ViewType): void {
         this.hideActiveView();
+        this._activeView = key;
         this.showView(key);
         this.renderView(key);
     }
