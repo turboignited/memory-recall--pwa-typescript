@@ -80,6 +80,10 @@ const createApp = () => {
 
     loader.setErrorListener(() => {
         console.error("Game could not load assets");
+        document.body.appendChild(
+            document.createElement("p").appendChild(
+                document.createTextNode("Game could not load assets. If this is your first time using this app please ensure you have a network connection. Cannot continue.")));
+        app.quit();
     });
 
     app.load(loader);
