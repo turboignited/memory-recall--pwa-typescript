@@ -24,14 +24,18 @@ with a backend, yet to come, and take part in a global leaderboard.
 
 ## Views
 The views are provided by subclassing View and implementing the createUI which should return the HTML container of the view.
-The subclass can implement the show, resize, hide, load, render and destroy methods. It is necessary for subclasses to call super
+The subclass can implement the show, hide, load, render and destroy methods. It is necessary for subclasses to call super
 to provide the common implementation of View.
 
 ### Resizing
 As the user is capable of resizing their window it is necessary for the App to listen to this event and inform the views.
 The dimensions of the App are determined by a desired resolution and a maximum resolution (usually the window width/height).
 The dimensions calculate a scale value to maintain the ratio while fitting within the min/max resolution available.
+The dimensions are static and are updated each resize and index will handle resizing the views and canvas.
 
+### Canvas
+The canvas has a pre-determined design resolution of 1280x720 pixels and the app will update it's scale rather than resizing it to prevent
+it from clearing.
 
 ## Testing
 Testing is available through Jest, with canvas mocking and TypeScript.
