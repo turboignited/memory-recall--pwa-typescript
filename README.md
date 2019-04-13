@@ -1,10 +1,12 @@
 # Memory Recall Game PWA TypeScript
 
-<img src="screenshots/loading.png" alt="V0.5 App Loading Screenshot" class="inline"/>
-<img src="screenshots/menu.png" alt="V0.5 Main Menu Screenshot" class="inline"/>
-<img src="screenshots/countdown.png" alt="V0.5 Countdown Screenshot" class="inline"/>
-<img src="screenshots/game.png" alt="V0.5 Game Screenshot" class="inline"/>
-
+<!-- <img src="screenshots/loading-0.6.png" alt="V0.6 App Loading Screenshot" class="inline"/>
+<img src="screenshots/menu-0.6.png" alt="V0.6 Main Menu Screenshot" class="inline"/>
+<img src="screenshots/countdown-0.6.png" alt="V0.6 Countdown Screenshot" class="inline"/>
+<img src="screenshots/game-0.6.png" alt="V0.6 Game Screenshot" class="inline"/> -->
+<img src="screenshots/menu-0.7.png" alt="V0.7 Main Menu Screenshot" class="inline"/>
+<img src="screenshots/game-0.7.png" alt="V0.7 Game Screenshot" class="inline"/>
+<img src="screenshots/pause-0.7.png" alt="V0.7 Pause Screenshot" class="inline"/>
 
 # About
 Memory Recall is a fun and quick game which provides random sequences of items to remember and recall.
@@ -51,5 +53,4 @@ npm run start
 
 
 # TODO List
-There is always more to solidify this basic implementation of a PWA. It's strength relies on using TypeScript. The code will
-never be complete as there is always different ways of doing things but it's really a template example.
+This project is continually being updated.

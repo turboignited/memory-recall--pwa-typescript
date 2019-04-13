@@ -1,31 +1,18 @@
-import { sprites } from "../assets/sprites.json";
-
-import { Dimensions } from "../utils/dimensions";
-
-import { Maths } from "../utils/maths";
-import { Loader } from "../utils/loader";
-import { ViewType } from "../views/view_type";
+import { sprites } from "./sprites.json";
 import { Sprite } from "./sprite";
+import { SpriteTypes } from "./sprite_types";
+import { Loader } from "../utils/loader";
 import { Point } from "../utils/point";
-import { SpriteTypes } from "../assets/sprite_types";
-import { Statics } from "../statics";
-
+import { AssetType } from "./asset_type";
 
 export class Sprites {
 
-    private _spriteSize: number = 0;
-    private _sprites: Sprite[][];
-    public get spriteSize(): number {
-        return this._spriteSize;
-    }
     public get sprites(): Sprite[][] {
         return this._sprites;
     }
 
-    constructor() {
-        this._spriteSize = Maths.GreatestCommonDivisor(Statics.Dimensions.width, Statics.Dimensions.height);
-        this._sprites = [];
-    }
+    private _sprites: Sprite[][] = [];
+
 
     public getRandomSprite(type: SpriteTypes): Sprite {
         const index = Math.floor(Math.random() * this._sprites[type].length);
@@ -35,15 +22,9 @@ export class Sprites {
     public getSprite(type: SpriteTypes, index: number): Sprite {
         return this._sprites[type][index];
     }
-    /**
-     * Must be called before all other functions to ensure images
-     * are ready and there were no errors on the network.
-     * If there are errors then the loader owner should handle it.
-     * @param loader Loader to inform of progress
-     * @param type ViewType to associate this instance with
-     */
-    public load(loader: Loader<ViewType>, type: ViewType): void {
-        loader.add(type, sprites.total);
+
+    constructor(loader: Loader<AssetType>) {
+        loader.add(AssetType.sprites, sprites.total);
         for (let i = 0; i < sprites.all.length; i++) {
             this._sprites[i] = [];
             for (let j = 0; j < sprites.all[i].urls.length; j++) {
@@ -51,17 +32,17 @@ export class Sprites {
                 image.onload = (ev: any) => {
                     image.onerror = null;
                     image.onload = null;
-                    loader.load(type);
+                    loader.load(AssetType.sprites);
                 }
+
                 image.onerror = (ev: any) => {
                     image.onerror = null;
                     image.onload = null;
-                    loader.error(type);
+                    loader.error(AssetType.sprites);
                 }
 
                 image.src = sprites.all[i].urls[j];
                 this._sprites[i].push(new Sprite(image, new Point(-100, -100)));
-
             }
         }
     }

@@ -1,3 +1,3 @@
 export enum SpriteTypes {
-    numbers
+    Numbers
 }

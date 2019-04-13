@@ -1,9 +1,15 @@
 import { Point } from "./point";
+import { Maths } from "./maths";
 
 export class Dimensions {
     private _width: number;
     private _height: number;
     private _scale: number;
+    private _gcd: number;
+
+    public get gcd(): number {
+        return this._gcd;
+    }
     public get width(): number {
         return this._width;
     }
@@ -18,6 +24,7 @@ export class Dimensions {
         this._width = width;
         this._height = height;
         this._scale = Math.min(maxWidth / width, maxHeight / height);
+        this._gcd = Maths.GreatestCommonDivisor(width, height);
     }
 
     public updateScale(maxWidth: number, maxHeight: number): void {

@@ -1,52 +1,101 @@
 import { View } from "./view";
 import { ViewType } from "./view_type";
-import { Loader } from "../utils/loader";
-import { App } from "../app";
-
 import { Game } from "../game/game";
 import { GameState } from "../game/game_state";
-import { Statics } from "../statics";
+import { Grid } from "../ui/grid";
+import { App } from "../app";
+import { Button } from "../ui/components";
+import { GameLogic } from "../game/game_logic";
+import { Sprite } from "../assets/sprite";
 
+/**
+ * @implements View
+ */
 export class GameView extends View {
+
     private _game: Game;
 
-    constructor(type: ViewType, app: App) {
-        super(type, app);
-        this._game = new Game();
+    constructor(type: ViewType) {
+        super(type);
+        this._game = new Game({
+            logic: new GameLogic({
+                callback: (success: boolean, score: number, times: number[]) => {
+                    this.onGameCompleted(success, score, times);
+                },
+                cellSize: App.dimensions.gcd,
+                columns: App.dimensions.width / App.dimensions.gcd,
+                rows: (App.dimensions.height / App.dimensions.gcd) - 1
+            })
+        });
     }
 
-    public load(loader: Loader<ViewType>): void {
-        if (loader) {
-            this._game.load(loader, this.type);
+    public onGameCompleted(success: boolean, score: number, times: number[]) {
+        console.log(`Game Complete: Success: ${success}, Score: ${score}, Times: ${JSON.stringify(times, null, 4)}`);
+        this._game.quit();
+        App.preferences.increaseScore(App.preferences.activeSprite);
+        const sprites: Sprite[] = [];
+        const activeSprite = App.preferences.activeSprite;
+
+        for (let i = 0; i < App.preferences.getScore(activeSprite); i++) {
+            sprites.push(App.assets.sprites.getRandomSprite(activeSprite));
         }
+
+        this._game.start(sprites);
     }
 
-    public destroy(): void {
-        super.destroy();
+    public onDestroy(): void {
         this._game.quit();
     }
 
-    public hide(): void {
-        super.hide();
+    public onHide(): void {
         if (this._game.state != GameState.Paused) {
             this._game.quit();
         }
     }
 
-    public show(): void {
-        super.show();
+    public onShow(): void {
         if (this._game.state == GameState.Paused) {
             this._game.resume();
         } else {
-            this._game.start();
+            const sprites: Sprite[] = [];
+            const activeSprite = App.preferences.activeSprite;
+
+            // for (let i = 0; i < App.preferences.getScore(activeSprite); i++) {
+            //     sprites.push(App.assets.sprites.getRandomSprite(activeSprite));
+            // }
+            for (let i = 0; i < 100; i++) {
+                sprites.push(App.assets.sprites.getRandomSprite(activeSprite));
+            }
+            this._game.start(sprites);
         }
     }
 
     public render(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
-        context.fillStyle = "blue";
-        context.globalAlpha=1;
-        context.fillText("Starting", Statics.Dimensions.width * 0.5, Statics.Dimensions.height * 0.5);
         this._game.render(context);
     }
+    public reset(): void {
+        if (this._game.state == GameState.Paused) {
+            this._game.restart();
+        }
+    }
+
+    public createCells(grid: Grid): void {
+        const pauseButton = Button("||", () => {
+            if (this._game.state == GameState.Playing) {
+                this._game.pause();
+                App.views.setView(ViewType.Pause);
+            }
+        });
+
+        grid.addCell({
+            type: this.type,
+            element: pauseButton,
+            row: grid.rows,
+            column: grid.columns * 0.5,
+            columnSpan: 2,
+            rowSpan: 1
+        });
+
+    }
+
 }

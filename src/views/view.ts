@@ -1,6 +1,5 @@
-import { Loader } from "../utils/loader";
 import { ViewType } from "./view_type";
-import { App } from "../app";
+import { Grid } from "../ui/grid";
 
 export abstract class View {
     private _type: ViewType;
@@ -12,7 +11,7 @@ export abstract class View {
         return this._type;
     }
 
-    constructor(type: ViewType, app: App) {
+    constructor(type: ViewType) {
         this._type = type;
         this._visible = false;
     }
@@ -20,19 +19,31 @@ export abstract class View {
      * Call to load images and other assets for the view
      * @param loader Required to inform about progress
      */
-    public load(loader: Loader<ViewType>): void { }
     /**
      * Call to show the HTML contents of this view
      */
-    public show(): void {
+    public show(grid: Grid): void {
+        if (this._visible) {
+            return;
+        }
         this._visible = true;
+        if (!grid.contains(this.type)) {
+            this.createCells(grid);
+        }
+        grid.showCells(this.type);
+        this.onShow();
     }
 
     /**
      * Call to hide the HTML contents of this view
      */
-    public hide(): void {
+    public hide(grid: Grid): void {
+        if (!this._visible) {
+            return;
+        }
         this._visible = false;
+        grid.hideCells(this.type);
+        this.onHide();
     }
 
     /**
@@ -40,10 +51,13 @@ export abstract class View {
      */
     public destroy(): void {
         this._visible = false;
+        this.onDestroy();
     }
-    /**
-     * Call to render canvas specific contents, can call requestAnimationFrame to repeat drawing.
-     * Ensure to check for if this view is showing to prevent rendering when not being shown.
-     */
-    public render(context: CanvasRenderingContext2D): void { }
+
+    public abstract reset(): void;
+    public abstract render(context: CanvasRenderingContext2D): void;
+    public abstract createCells(grid: Grid): void;
+    public abstract onShow(): void;
+    public abstract onHide(): void;
+    public abstract onDestroy(): void;
 }

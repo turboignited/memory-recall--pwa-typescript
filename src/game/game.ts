@@ -1,17 +1,17 @@
-import { Loader } from "../utils/loader";
-import { ViewType } from "../views/view_type";
 import { GameState } from "./game_state";
-import { GameLogic } from "./logic";
-import { Statics } from "../statics";
-
+import { Logic } from "./logic";
+import { Sprite } from "../assets/sprite";
+export interface GameConstructorArgs {
+    logic: Logic;
+}
 export declare type CountdownCallback = (seconds: number) => void;
 export class Game {
-    private _state: GameState = GameState.None;;
-    private _countdownInterval: number = 0;
-    private _animationFrame: number = 0;
-    private _logic: GameLogic;
+    private _state: GameState;
+    private _countdownInterval: number;
+    private _animationFrame: number;
+    private _logic: Logic;
 
-    public get logic(): GameLogic {
+    public get logic(): Logic {
         return this._logic;
     }
 
@@ -27,12 +27,12 @@ export class Game {
         return this._animationFrame;
     }
 
-    constructor() {
-        this._logic = new GameLogic();
-    }
 
-    public load(loader: Loader<ViewType>, type: ViewType): void {
-        this._logic.load(loader, type);
+    constructor(args: GameConstructorArgs) {
+        this._state = GameState.None;
+        this._countdownInterval = 0;
+        this._animationFrame = 0;
+        this._logic = args.logic;
     }
 
     public render(context: CanvasRenderingContext2D): void {
@@ -45,23 +45,31 @@ export class Game {
             });
         } else if (this._state == GameState.Countdown) {
             this.countdown(3, (seconds: number) => {
-                context.clearRect(0, 0, Statics.Dimensions.width, Statics.Dimensions.height);
+                context.globalAlpha = 1.0;
+                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
                 context.fillStyle = "black";
-                context.fillText(seconds.toString(), Statics.Dimensions.width * 0.5, Statics.Dimensions.height * 0.5);
+
+                context.fillText(seconds.toString(), context.canvas.width * 0.5, context.canvas.height * 0.5);
                 if (seconds == 0) {
+                    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                    context.globalAlpha = 1;
+                    context.fillText("Starting", context.canvas.width * 0.5, context.canvas.height * 0.5);
+
                     this.render(context);
+
                 }
             });
         }
     }
 
-    public start(): boolean {
+    public start(sprites: Sprite[]): boolean {
         if (this._state != GameState.None) {
             return false;
         }
+        this._logic.initialize(sprites);
         this._state = GameState.Countdown;
-        this._logic.setup();
         return true;
+
     }
 
     public countdown(seconds: number, callback: CountdownCallback): boolean {
@@ -98,10 +106,26 @@ export class Game {
         return false;
     }
 
+    public restart(): boolean {
+        if (this._state == GameState.Paused) {
+            clearInterval(this._countdownInterval);
+            cancelAnimationFrame(this._animationFrame);
+            this._countdownInterval = 0;
+            this._animationFrame = 0;
+            this._logic.restart();
+            this._state = GameState.Countdown;
+            return true;
+        }
+        return false;
+    }
+
     public quit(): boolean {
         this._state = GameState.None;
         clearInterval(this._countdownInterval);
         cancelAnimationFrame(this._animationFrame);
+        this._countdownInterval = 0;
+        this._animationFrame = 0;
+        this._logic.cancel();
         return true;
     }
 }

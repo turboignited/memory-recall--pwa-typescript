@@ -66,7 +66,7 @@ export class Loader<T> {
     public load(key: T): number {
         if (this._total > 0 && this._loaded < this._total) {
             const loading = this._loading.get(key);
-            if (loading != null) {
+            if (loading != undefined) {
                 const remaining = loading.remaining - 1;
                 if (remaining >= 0) {
                     const status: LoadStatus = {
@@ -106,7 +106,7 @@ export class Loader<T> {
 
     public error(key: T): void {
         const loading = this._loading.get(key);
-        if (loading != null) {
+        if (loading != undefined) {
             const status: LoadStatus = {
                 remaining: loading.remaining,
                 total: loading.total,

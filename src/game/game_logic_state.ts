@@ -1,7 +1,7 @@
-export enum LogicState {
+export enum GameLogicState {
     None,
     Reveal,
     Select,
     Fail,
-    Finish
+    Success
 }

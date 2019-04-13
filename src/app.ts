@@ -1,113 +1,76 @@
-import { Canvas } from "./render/canvas";
-import { View } from "./views/view";
-import { MainMenuView } from "./views/main_menu_view";
-import { Loader } from "./utils/loader";
+import { Views } from "./views/views";
+import { Grid } from "./ui/grid";
+import { Dimensions } from "./utils/dimensions";
+import { Assets } from "./assets/assets";
+import { Preferences } from "./storage/preferences";
 import { ViewType } from "./views/view_type";
-import { LoadingView } from "./views/loading_view";
-import { GameView } from "./views/game_view";
-import { PauseView } from "./views/pause_view";
+import { Loader } from "./utils/loader";
+import { AssetType } from "./assets/asset_type";
 
 /**
  * Entry point.
- * Initializes and interacts with the views associated with the app
  */
 export class App {
-    private _canvas: Canvas;
-    private _views: Map<ViewType, View>;
-    private _activeView!: ViewType;
+    private static _context: CanvasRenderingContext2D;
+    private static _views: Views;
+    private static _dimensions: Dimensions;
+    private static _grid: Grid;
+    private static _assets: Assets;
+    private static _preferences: Preferences;
 
-    public get canvas(): Canvas {
-        return this._canvas;
+    public static get context(): CanvasRenderingContext2D {
+        return this._context;
     }
 
-    public get views(): Map<ViewType, View> {
+    public static get views(): Views {
         return this._views;
     }
-    public get activeView(): ViewType {
-        return this._activeView;
+
+    public static get dimensions(): Dimensions {
+        return this._dimensions;
     }
 
-    constructor(context: CanvasRenderingContext2D) {
-        this._canvas = new Canvas(context);
-        this._views = new Map<ViewType, View>();
-        this._views.set(ViewType.Load, new LoadingView(ViewType.Load, this));
-        this._views.set(ViewType.Main, new MainMenuView(ViewType.Main, this));
-        this._views.set(ViewType.Game, new GameView(ViewType.Game, this));
-        this._views.set(ViewType.Pause, new PauseView(ViewType.Pause, this));
+    public static get grid(): Grid {
+        return this._grid;
     }
 
-
-    /**
-     * @param loader Loader to be passed to views to report on 
-     * download progress
-     */
-    public load(loader: Loader<ViewType>): void {
-        if (loader != null) {
-            this._views.forEach((value) => {
-                value.load(loader);
-            });
-        }
+    public static get assets(): Assets {
+        return this._assets;
     }
 
-    /**
-     * Destroy all Views
-     */
-    public quit(): void {
-        this._views.forEach((value) => {
-            value.destroy();
-        });
+    public static get preferences(): Preferences {
+        return this._preferences;
     }
 
-    /**
-     * Will hide current activeview before showing, rendering
-     * and setting the specified view active
-     * @param key Views key to show
-     */
-    public setView(key: ViewType): void {
-        this.hideActiveView();
-        this.showView(key);
-        this.renderView(key);
+    public static get maximumWidth(): number {
+        return window.innerWidth - 20;
     }
 
-    public getView(key: ViewType): View | undefined {
-        return this._views.get(key);
-    }
-    /**
-     * Will hide activeview
-     */
-    public hideActiveView(): void {
-        this.hideView(this._activeView);
-    }
-    /**
-     * Will show view specified
-     * @param key Views key to show
-     */
-    public showView(key: ViewType): void {
-        const view = this._views.get(key);
-        if (view != undefined) {
-            view.show();
-            this._activeView = key;
-        }
-    }
-    /**
-     * Will render view specified
-     * @param key Views key to render
-     */
-    public renderView(key: ViewType): void {
-        const view = this._views.get(key);
-        if (view != undefined) {
-            view.render(this.canvas.context);
-        }
+    public static get maximumHeight(): number {
+        return window.innerHeight - 20;
     }
 
-    /**
-     * Will hide view specified
-     * @param key Views key to hide
-     */
-    public hideView(key: ViewType): void {
-        const view = this._views.get(key);
-        if (view != undefined) {
-            view.hide();
-        }
+    constructor(context: CanvasRenderingContext2D, width: number, height: number, loader: Loader<AssetType>) {
+        const dimensions = new Dimensions(width, height, App.maximumWidth, App.maximumHeight);
+        App._dimensions = dimensions
+        App._context = context;
+        App._grid = new Grid(context.canvas, dimensions);
+        App._preferences = new Preferences();
+        App._assets = new Assets(loader);
+        App._views = new Views(loader);
+        App._views.setView(ViewType.Load);
+        context.canvas.width = width;
+        context.canvas.height = height;
+        context.canvas.style.transformOrigin = "0 0"; //scale from top left
+        context.canvas.style.transform = `scale(${dimensions.scale})`;
+        context.canvas.style.borderRadius = "4px";
+        window.onresize = () => {
+            App._dimensions.updateScale(App.maximumWidth, App.maximumHeight);
+            App._grid.container.style.width = `${App._dimensions.width * App._dimensions.scale}px`;
+            App._grid.container.style.height = `${App._dimensions.height * App._dimensions.scale}px`;
+            App._context.canvas.style.transformOrigin = "top left"; //scale from top left
+            App._context.canvas.style.transform = `scale(${App._dimensions.scale})`;
+        };
+
     }
 }

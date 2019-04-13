@@ -1,5 +1,4 @@
 import { Loader, LoadStatus, LoadProgress } from "../src/utils/loader";
-import { ViewType } from "../src/views/view_type";
 
 describe("add", () => {
     test("should store name and number in loading map", () => {
