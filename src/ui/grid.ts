@@ -38,8 +38,8 @@ export class Grid {
         container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
         container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
-        background.style.border = "1px solid black";
-        background.style.backgroundColor = "gray";
+        background.style.border = "1px solid #0C6DB3";
+        background.style.backgroundColor = "#199EFF";
 
         background.style.zIndex = "0";
         background.style.gridRow = `${1} / span ${rows}`;
@@ -65,9 +65,9 @@ export class Grid {
         args.element.style.gridColumn = `${args.column} / span ${args.columnSpan ? args.columnSpan : 1}`;
         args.element.style.msGridColumn = `${args.column} / span ${args.columnSpan ? args.columnSpan : 1}`;
         args.element.style.zIndex = "0";
-        args.element.style.border = "1px solid black";
+        args.element.style.border = "1px solid #0C6DB3";
         args.element.style.verticalAlign = "center";
-
+        args.element.style.borderRadius="18px";
         if (this._cells[args.type] == undefined) {
             this._cells[args.type] = [];
         }

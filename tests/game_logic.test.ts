@@ -6,7 +6,9 @@ const createGameLogicAndInitialize = (cellSize: number, columns: number, rows: n
     const logic: GameLogic = new GameLogic({
         cellSize: cellSize,
         columns: columns,
-        rows: rows
+        rows: rows,
+        callback: undefined
+
     });
     const sprites: Sprite[] = [];
     for (let i = 0; i < columns * rows; i++) {
@@ -26,12 +28,12 @@ describe("initialize", () => {
             new Sprite(document.createElement("img"), new Point(-100, -100))])).toBeTruthy();
         expect(logic.activeSprites.length).toEqual(4);
     });
-    test("should set positions of activeSprites to fit within passed in args", () => {
+    test("should set positions of activeSprites to fit within passed in args -1 row", () => {
         const logic: GameLogic = createGameLogicAndInitialize(80, 2, 2);
         for (let i = 0; i < logic.activeSprites.length; i++) {
             expect(logic.activeSprites[i].position.x).toBeLessThan(80 * 2);
             expect(logic.activeSprites[i].position.x).toBeGreaterThanOrEqual(0);
-            expect(logic.activeSprites[i].position.y).toBeLessThan(80 * 2);
+            expect(logic.activeSprites[i].position.y).toBeLessThanOrEqual(80 * 2);
             expect(logic.activeSprites[i].position.y).toBeGreaterThanOrEqual(0);
         }
     });
@@ -39,7 +41,8 @@ describe("initialize", () => {
         const logic: GameLogic = new GameLogic({
             cellSize: 80,
             columns: 8,
-            rows: 8
+            rows: 8,
+            callback: undefined
         });
         const amount: number = 20;
         const sprites: Sprite[] = [];
@@ -66,7 +69,9 @@ describe("initialize", () => {
         const logic: GameLogic = new GameLogic({
             cellSize: 80,
             columns: 2,
-            rows: 2
+            rows: 2,
+            callback: undefined
+
         });
         const sprites: Sprite[] = [];
         for (let i = 0; i < 5; i++) {
@@ -80,7 +85,8 @@ describe("initialize", () => {
         const logic: GameLogic = new GameLogic({
             cellSize: 80,
             columns: 2,
-            rows: 2
+            rows: 2,
+            callback: undefined
         });
         const sprites: Sprite[] = [];
         for (let i = 0; i < 4; i++) {
@@ -94,7 +100,7 @@ describe("initialize", () => {
     });
 });
 
-describe("revealNextSprite",()=>{
+describe("revealNextSprite", () => {
 
 
 

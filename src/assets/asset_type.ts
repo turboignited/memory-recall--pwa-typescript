@@ -1,3 +1,3 @@
-export enum AssetType {
+export const enum AssetType {
     sprites
 }

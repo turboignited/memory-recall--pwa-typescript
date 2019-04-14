@@ -37,7 +37,7 @@ export class LoadingView<T> extends View {
 
         if (this.visible) {
 
-            context.clearRect(0, 0, App.dimensions.width, App.dimensions.height);
+            context.clearRect(0, App.dimensions.height-100, App.dimensions.width, 100);
             Rendering.renderProgressBar({
                 context: context,
                 height: 100,

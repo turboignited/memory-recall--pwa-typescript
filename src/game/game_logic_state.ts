@@ -1,4 +1,4 @@
-export enum GameLogicState {
+export const enum GameLogicState {
     None,
     Reveal,
     Select,

@@ -27,6 +27,15 @@ export class Sprites {
         loader.add(AssetType.sprites, sprites.total);
         for (let i = 0; i < sprites.all.length; i++) {
             this._sprites[i] = [];
+            if (sprites.all[i].name === "letters") {
+                if (sprites.all[i].urls.length !== 26) {
+                    console.error("Wrong amount of letter sprites specified in json file.");
+                }
+            } else if (sprites.all[i].name === "numbers") {
+                if (sprites.all[i].urls.length !== 10) {
+                    console.error("Wrong amount of numbers sprites specified in json file.");
+                }
+            }
             for (let j = 0; j < sprites.all[i].urls.length; j++) {
                 const image = new Image();
                 image.onload = (ev: any) => {

@@ -4,9 +4,13 @@
 <img src="screenshots/menu-0.6.png" alt="V0.6 Main Menu Screenshot" class="inline"/>
 <img src="screenshots/countdown-0.6.png" alt="V0.6 Countdown Screenshot" class="inline"/>
 <img src="screenshots/game-0.6.png" alt="V0.6 Game Screenshot" class="inline"/> -->
-<img src="screenshots/menu-0.7.png" alt="V0.7 Main Menu Screenshot" class="inline"/>
+<!-- <img src="screenshots/menu-0.7.png" alt="V0.7 Main Menu Screenshot" class="inline"/>
 <img src="screenshots/game-0.7.png" alt="V0.7 Game Screenshot" class="inline"/>
-<img src="screenshots/pause-0.7.png" alt="V0.7 Pause Screenshot" class="inline"/>
+<img src="screenshots/pause-0.7.png" alt="V0.7 Pause Screenshot" class="inline"/> -->
+
+<img src="screenshots/menu-0.8.png" alt="V0.8 Main Menu Screenshot" class="inline"/>
+<img src="screenshots/game-0.8.png" alt="V0.8 Game Screenshot" class="inline"/>
+<img src="screenshots/pause-0.8.png" alt="V0.8 Pause Screenshot" class="inline"/>
 
 ## Architecture
 The main class instantiated on page load is App. Which checks for availability of a canvas 2d context and 
@@ -29,5 +33,5 @@ Developing requires the webpack-dev-server and supports reloading upon code chan
 npm run start
 
 
-# TODO List
+## TODO List
 This project is continually being updated.

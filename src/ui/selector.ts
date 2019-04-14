@@ -1,19 +1,19 @@
 import { SpriteTypes } from "../assets/sprite_types";
 
-export interface Selection<T> {
+export interface Selection {
     element: HTMLElement;
-    type: T;
+    title: string
 }
 
-export declare type SelectionCallback<T> = (selection: T) => void;
-export class Selector<T> {
+export declare type SelectionCallback = (index: number) => void;
+export class Selector {
     private _leftButton: HTMLButtonElement;
     private _rightButton: HTMLButtonElement;
     private _titleHeading: HTMLHeadElement;
     private _selectionContainer: HTMLDivElement;
-    private _selections: Selection<T>[];
+    private _selections: Selection[];
     private _selected: number = 0;
-    private _callback: SelectionCallback<T>;
+    private _callback: SelectionCallback;
     public get leftButton(): HTMLButtonElement {
         return this._leftButton;
     }
@@ -32,15 +32,15 @@ export class Selector<T> {
         return this._selected;
     }
 
-    public get selections(): Selection<T>[] {
+    public get selections(): Selection[] {
         return this._selections;
     }
 
-    public get callback(): SelectionCallback<T> {
+    public get callback(): SelectionCallback {
         return this._callback;
     }
 
-    constructor(selections: Selection<T>[], callback: SelectionCallback<T>, selected: number = 0) {
+    constructor(selections: Selection[], callback: SelectionCallback, selected: number = 0) {
         const leftButton = document.createElement("button");
         const rightButton = document.createElement("button");
         const selectionContainer = document.createElement("div");
@@ -60,9 +60,7 @@ export class Selector<T> {
         this._selections = selections;
         this._titleHeading = titleHeading;
         this._callback = callback;
-        console.log(this);
         this.select(selected);
-        
     }
 
     public selectPrevious(): void {
@@ -76,7 +74,7 @@ export class Selector<T> {
     }
 
     public selectNext(): void {
-        if (this._selected + 1 <= this._selections.length - 1) {
+        if (this._selected + 1 < this._selections.length) {
             this._selected++;
         } else {
             this._selected = 0;
@@ -91,12 +89,12 @@ export class Selector<T> {
         }
         const selection = this._selections[index];
 
-        this._titleHeading.innerText =(selection.type).toString();
+        this._titleHeading.innerText = selection.title;
         if (this._selectionContainer.firstChild != null) {
             this._selectionContainer.replaceChild(selection.element, this._selectionContainer.firstChild);
         } else {
             this._selectionContainer.appendChild(selection.element);
         }
-        this._callback(selection.type);
+        this._callback(index);
     }
 }

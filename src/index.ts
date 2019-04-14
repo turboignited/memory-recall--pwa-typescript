@@ -23,14 +23,14 @@ const createApp = (context: CanvasRenderingContext2D) => {
     });
 
     document.body.appendChild(App.grid.container);
-    App.grid.container.animate([
-        { // from
-            transform: `scale(0.0)`
-        },
-        { // to
-            transform: `scale(1.0)`
-        }
-    ], 1000);
+    // App.grid.container.animate([
+    //     { // from
+    //         transform: `scale(0.0)`
+    //     },
+    //     { // to
+    //         transform: `scale(1.0)`
+    //     }
+    // ], 1000);
 };
 
 const getCanvasContext = (): CanvasRenderingContext2D | null => {

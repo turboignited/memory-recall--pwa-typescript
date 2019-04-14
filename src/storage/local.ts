@@ -9,6 +9,14 @@ export class LocalStorage {
         }
     }
 
+    public static removeKey(key: string): void {
+        try {
+            localStorage.removeItem(key);
+        } catch (e) {
+            throw e;
+        }
+    }
+
     public static setValue(key: string, value: string): void {
         try {
             localStorage.setItem(key, value);

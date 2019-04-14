@@ -3,5 +3,7 @@ export enum ViewType {
     Game,
     Pause,
     Load,
-    Help
+    Help,
+    Success,
+    Fail
 }

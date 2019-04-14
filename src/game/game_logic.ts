@@ -8,9 +8,9 @@ export interface GameLogicConstructor {
     columns: number;
     rows: number;
     cellSize: number;
-    callback: GameLogicCompletedCallback;
+    callback?: GameLogicCompletedCallback;
 }
-export declare type GameLogicCompletedCallback = (success: boolean, score: number, times: number[]) => void;
+export declare type GameLogicCompletedCallback = (success: boolean, score: number, time: number) => void;
 /**
  * @implements Logic
  */
@@ -47,6 +47,10 @@ export class GameLogic implements Logic {
     public get revealed(): number {
         return this._revealed;
     }
+    private readonly _revealSpeed: number = 100;
+    public get revealSpeed(): number {
+        return this._revealInterval;
+    }
     private _shouldRender: boolean;
     public get shouldRender(): boolean {
         return this._shouldRender;
@@ -63,12 +67,12 @@ export class GameLogic implements Logic {
     public get listening(): boolean {
         return this._listening;
     }
-    private _times: number[];
-    public get times(): number[] {
-        return this._times;
+    private _startTime: number;
+    public get startTime(): number {
+        return this._startTime;
     }
-    private _callback: GameLogicCompletedCallback;
-    public get callback(): GameLogicCompletedCallback {
+    private _callback: GameLogicCompletedCallback | undefined;
+    public get callback(): GameLogicCompletedCallback | undefined {
         return this._callback;
     }
     private _correct: number;
@@ -78,7 +82,7 @@ export class GameLogic implements Logic {
     public get availablePositions(): Point[] {
         const available: Point[] = [];
         for (let x = 0; x < this._columns; x++) {
-            for (let y = 1; y < this._rows; y++) {
+            for (let y = 1; y < this._rows + 1; y++) {
                 available.push(new Point(x * this._cellSize, y * this._cellSize));
             }
         }
@@ -89,7 +93,9 @@ export class GameLogic implements Logic {
         this._columns = args.columns;
         this._cellSize = args.cellSize;
         this._rows = args.rows;
-        this._callback = args.callback;
+        if (args.callback != undefined) {
+            this._callback = args.callback;
+        }
         this._state = GameLogicState.None;
         this._activeSprites = [];
         this._listening = false;
@@ -99,7 +105,7 @@ export class GameLogic implements Logic {
         this._revealing = false;
         this._revealInterval = 0;
         this._correct = 0;
-        this._times = [];
+        this._startTime = 0;
     }
     public shuffleArray(arr: any[]): void {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -114,13 +120,13 @@ export class GameLogic implements Logic {
         if (sprites.length <= this._columns * this._rows) {
             const availablePositions = this.availablePositions;
             this.shuffleArray(availablePositions);
-
+            this._activeSprites.splice(0, this._activeSprites.length);
             for (let i = 0; i < sprites.length; i++) {
                 this._activeSprites[i] = sprites[i];
                 this._activeSprites[i].position = availablePositions[i];
             }
             clearInterval(this._revealInterval);
-            this._times.splice(0, this._times.length);
+            this._startTime = 0;
             this._selected = undefined;
             this._revealing = false;
             this._revealed = 0;
@@ -142,7 +148,7 @@ export class GameLogic implements Logic {
 
     public restart(): void {
         clearInterval(this._revealInterval);
-        this._times.splice(0, this._times.length);
+        this._startTime = 0;
         this._selected = undefined;
         this._revealing = false;
         this._revealed = 0;
@@ -201,12 +207,6 @@ export class GameLogic implements Logic {
                 case GameLogicState.Select:
                     this.renderSelectState(context);
                     break;
-                case GameLogicState.Fail:
-                    this.renderFailState(context);
-                    break;
-                case GameLogicState.Success:
-                    this.renderSuccessState(context);
-                    break;
                 default:
                     break;
             }
@@ -229,7 +229,6 @@ export class GameLogic implements Logic {
      */
 
     public updateRevealState(): void {
-        console.log("updateRevealState()");
         if (!this._revealing) {
             if (this._revealed == this._activeSprites.length) {
                 this._state = GameLogicState.Select;
@@ -242,9 +241,7 @@ export class GameLogic implements Logic {
     }
 
     public updateSelectState(): void {
-        console.log("updateSelectState()");
         if (this._correct == this._revealed) {
-            console.log("Correct!!")
             this._state = GameLogicState.Success;
             this._shouldUpdate = true;
             this._shouldRender = true;
@@ -253,23 +250,25 @@ export class GameLogic implements Logic {
 
     public updateFailState(): void {
         if (this._state == GameLogicState.Fail) {
-            console.log("updateFailState()");
-            this._callback(false, this._activeSprites.length, this._times);
+            if (this._callback != undefined) {
+                this._callback(false, this._activeSprites.length, Date.now() - this._startTime);
+            }
             this._shouldRender = true;
         }
     }
 
     public updateSuccessState(): void {
         if (this._state == GameLogicState.Success) {
-            console.log("updateSuccessState()");
-            this._callback(true, this._activeSprites.length, this._times);
-
+            if (this._callback != undefined) {
+                this._callback(true, this._activeSprites.length, Date.now() - this._startTime);
+            }
             this._shouldRender = true;
         }
     }
 
     public setCanvasClickListener(canvas: HTMLCanvasElement): void {
         canvas.addEventListener("click", (ev: MouseEvent) => {
+
             this.onCanvasClicked(ev);
         }, false);
         this._listening = true;
@@ -288,7 +287,6 @@ export class GameLogic implements Logic {
      * 4 Success
      */
     public renderNoneState(context: CanvasRenderingContext2D): void {
-        console.log("renderNoneState");
         context.globalAlpha = 1.0;
 
         context.clearRect(0, 0, this._cellSize * this._columns, this._cellSize * this._rows);
@@ -296,7 +294,7 @@ export class GameLogic implements Logic {
             context: context,
             cellSize: this._cellSize,
             columns: this._columns,
-            rows: this._rows,
+            rows: this._rows + 1,
             rowOffset: 1,
             strokeColour: "black",
             strokeWidth: 1.5
@@ -306,7 +304,6 @@ export class GameLogic implements Logic {
     }
 
     public renderSelectState(context: CanvasRenderingContext2D): void {
-        console.log("renderSelectState");
         if (!this._listening) {
             this.setCanvasClickListener(context.canvas);
         } else {
@@ -324,7 +321,7 @@ export class GameLogic implements Logic {
 
 
                     this._correct++;
-                    this._times.push(Date.now());
+
                     if (this._correct > 1) {
                         Rendering.renderLine({
                             context: context,
@@ -334,6 +331,8 @@ export class GameLogic implements Logic {
                             strokeColour: "green",
                             strokeWidth: 6
                         });
+                    } else {
+                        this._startTime = Date.now();
                     }
                     if (this._correct == this._activeSprites.length) {
                         this._state = GameLogicState.Success;
@@ -356,9 +355,14 @@ export class GameLogic implements Logic {
     }
 
     public onPositionSelected(position: Point): void {
+
+
         if (this.spriteExistsAt(position)) {
+
             this._selected = position;
             this._shouldRender = true;
+        } else {
+
         }
     }
 
@@ -369,17 +373,7 @@ export class GameLogic implements Logic {
         return false;
     }
 
-    public renderFailState(context: CanvasRenderingContext2D): void {
-        console.log("renderFailState");
-        context.fillStyle = "red";
-        context.fillRect(0, 0, 100, 100);
-    }
-    public renderSuccessState(context: CanvasRenderingContext2D): void {
-        console.log("renderSucessState");
-    }
-
     public renderRevealState(context: CanvasRenderingContext2D): void {
-        console.log("renderRevealState");
         const sprite = this._activeSprites[this._revealed];
         if (sprite.alpha == 1) {
             this._revealed++;
@@ -421,10 +415,16 @@ export class GameLogic implements Logic {
     }
 
     public onCanvasClicked(ev: MouseEvent): void {
+
         if (this._state == GameLogicState.Select) {
+
             const column = Math.floor(ev.offsetX / this._cellSize % this._columns);
-            const row = Math.floor(ev.offsetY / this._cellSize % this._rows);
+            const row = Math.floor(ev.offsetY / this._cellSize % (this._rows + 1));
             const position = new Point(column * this._cellSize, row * this._cellSize);
+
+
+
+
             this.onPositionSelected(position);
         }
     }
@@ -443,7 +443,7 @@ export class GameLogic implements Logic {
                 clearInterval(this._revealInterval);
             }
         }
-        this._revealInterval = setInterval(reveal, 200);
+        this._revealInterval = setInterval(reveal, this._revealSpeed);
     }
 
 }

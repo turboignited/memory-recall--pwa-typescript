@@ -1,67 +1,95 @@
 import { View } from "./view";
-import { ViewType } from "./view_type";
 import { Grid } from "../ui/grid";
-import { App } from "../app";
-import { Checkbox, Button } from "../ui/components";
 import { Table } from "../ui/table";
-import { Selector, Selection } from "../ui/selector";
 import { SpriteTypes } from "../assets/sprite_types";
+import { App } from "../app";
+import { Selector, Selection } from "../ui/selector";
+import { Checkbox, Button } from "../ui/components";
+import { ViewType } from "./view_type";
 
-/**
- * @implements View
- */
 export class MainMenuView extends View {
-    public onShow(): void {
 
-    }
-    public onHide(): void {
-    }
-    public onDestroy(): void {
+    private _playerScoreTable!: Table;
+
+    public reset(): void {
     }
 
     public render(context: CanvasRenderingContext2D): void {
-        context.clearRect(0, 0, App.dimensions.width, App.dimensions.height);
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
     }
-    public reset(): void { }
+    public onShow(): void {
+        // const activeSprite = App.preferences.activeSprite;
+        // let playerScore = App.preferences.getScore(activeSprite);
+
+        // if (playerScore != null) {
+        //     if(this._playerScoreTable.hasRow(SpriteTypes[playerScore.type]));
+        //     this._playerScoreTable.addRow([SpriteTypes[score.type], score.score, score.time])
+        //     this._playerScoreTable.addCell(Button("x", () => {
+        //         App.preferences.deleteScore(SpriteTypes.Numbers);
+        //         this._playerScoreTable.deleteRow(SpriteTypes.Numbers);
+        //     }));
+
+        // }
+    }
 
     public createCells(grid: Grid): void {
         const logo = document.createElement("img");
-        const globalScoresTable = new Table(["Mode", "Score"]);
-        const playerScoreTable = new Table(["Mode", "Score"]);
-        /**
-         * Sprite Selector
-         */
-        const selections: Selection<SpriteTypes>[] = [];
-        const typeValues = Object.values(SpriteTypes);
-        for (let i = 0; i < Math.round(Object.keys(SpriteTypes).length / 2); i++) {
-            selections.push({
-                element: App.assets.sprites.getSprite(i, 0).image,
-                type: typeValues[i * 2]
-            });
-        }
-        console.log(App.preferences.activeSprite)
-        const spriteSelector = new Selector<SpriteTypes>(selections, (type: SpriteTypes) => {
-            App.preferences.setActiveSprite(type);
 
-        }, App.preferences.activeSprite);
+        const modeHeading = document.createElement("h3");
+        const scoreHeading = document.createElement("h3");
+        const timeHeading = document.createElement("h3");
+        modeHeading.innerText = "Mode";
+        scoreHeading.innerText = "Score";
+        timeHeading.innerText = "Time";
+        this._playerScoreTable = new Table([modeHeading, scoreHeading, timeHeading]);
+
+        let playerScores = App.preferences.getScores();
+        for (let i = 0; i < playerScores.length; i++) {
+            const score = playerScores[i];
+            const modeText = document.createElement("p");
+            const scoreText = document.createElement("p");
+            const timeText = document.createElement("p");
+            modeText.innerText = SpriteTypes[score.type];
+            scoreText.innerText = score.score.toString();
+            timeText.innerText = score.time.toString();
+            this._playerScoreTable.addRow([modeText, scoreText, timeText])
+            this._playerScoreTable.addCell(i + 1, Button("x", () => {
+                App.preferences.deleteScore(score.type);
+                this._playerScoreTable.deleteRow(score.type + 1);
+            }));
+        }
+        // const spriteSelector = new Selector([
+        //     {
+        //         element: App.assets.sprites.getSprite(SpriteTypes.Numbers, 0).image,
+        //         title: "Numbers"
+        //     },
+        //     {
+        //         element: App.assets.sprites.getSprite(SpriteTypes.Letters, 0).image,
+        //         title: "Letters"
+        //     }
+        // ], (index: number) => {
+        //     this._playerScoreTable.highlightRow(index);
+        //     App.preferences.setActiveSprite(index as SpriteTypes);
+        // }, App.preferences.activeSprite);
 
         logo.src = "images/logo.png";
         // logo.style.width = "100%";
         // logo.style.height = "auto";
         const onlineIndicator = document.createElement("p");
         if (false) {
-            onlineIndicator.innerHTML = "&#10687;"
+            onlineIndicator.innerHTML = "&#10687;";
         } else {
-            onlineIndicator.innerHTML = "&#10686;"
+            onlineIndicator.innerHTML = "&#10686;";
         }
 
-        const playerScore = document.createElement("p");
-        playerScore.innerText = App.preferences.getScore(SpriteTypes.Numbers).toString();
+        // const playerScore = document.createElement("p");
+        // playerScore.innerText = App.preferences.getScore(SpriteTypes.Numbers).toString();
 
         const topContainer = document.createElement("div");
         topContainer.style.boxShadow = "0 0 4px black";
         const rightTitle = document.createElement("h2");
-        rightTitle.innerText = "Global Scores"
+        rightTitle.innerText = "Global Scores";
 
         const rightContainer = document.createElement("div");
         rightContainer.style.boxShadow = "0 0 4px black";
@@ -71,7 +99,7 @@ export class MainMenuView extends View {
 
 
         const leftTitle = document.createElement("h2");
-        leftTitle.innerText = "Your Scores"
+        leftTitle.innerText = "Your Scores";
 
         const topTitle = document.createElement("h1");
         topTitle.innerText = "Memory Recall";
@@ -82,12 +110,12 @@ export class MainMenuView extends View {
         });
 
         termsCheckbox.style.verticalAlign = "top";
-        termsCheckbox.style.alignSelf = "center"
+        termsCheckbox.style.alignSelf = "center";
         const acceptText = document.createElement("p");
-        acceptText.innerText = "Accept "
+        acceptText.innerText = "Accept ";
         const acceptLink = document.createElement("a");
         acceptLink.href = "https://turboignited.com/terms-and-conditions";
-        acceptLink.innerText = "terms and conditions."
+        acceptLink.innerText = "terms and conditions.";
         acceptText.appendChild(acceptLink);
         acceptText.style.alignSelf = "center"
 
@@ -150,38 +178,38 @@ export class MainMenuView extends View {
         });
         grid.addCell({
             type: this.type,
-            element: playerScoreTable.element,
+            element: this._playerScoreTable.tableElement,
             row: 4,
             rowSpan: 5,
             column: 1,
             columnSpan: 5
         });
-        grid.addCell({
-            type: this.type,
-            element: spriteSelector.leftButton,
-            row: grid.rows - 5,
-            column: 7
-        });
-        grid.addCell({
-            type: this.type,
-            element: spriteSelector.selectionContainer,
-            row: grid.rows - 5,
-            column: 8,
-            columnSpan: 2
-        });
-        grid.addCell({
-            type: this.type,
-            element: spriteSelector.titleHeading,
-            row: grid.rows - 6,
-            column: 7,
-            columnSpan: 4
-        });
-        grid.addCell({
-            type: this.type,
-            element: spriteSelector.rightButton,
-            row: grid.rows - 5,
-            column: 10
-        });
+        // grid.addCell({
+        //     type: this.type,
+        //     element: spriteSelector.leftButton,
+        //     row: grid.rows - 5,
+        //     column: 7
+        // });
+        // grid.addCell({
+        //     type: this.type,
+        //     element: spriteSelector.selectionContainer,
+        //     row: grid.rows - 5,
+        //     column: 8,
+        //     columnSpan: 2
+        // });
+        // grid.addCell({
+        //     type: this.type,
+        //     element: spriteSelector.titleHeading,
+        //     row: grid.rows - 6,
+        //     column: 7,
+        //     columnSpan: 4
+        // });
+        // grid.addCell({
+        //     type: this.type,
+        //     element: spriteSelector.rightButton,
+        //     row: grid.rows - 5,
+        //     column: 10
+        // });
         grid.addCell({
             type: this.type,
             element: playButton,
@@ -206,14 +234,14 @@ export class MainMenuView extends View {
             column: 12,
             columnSpan: 5
         });
-        grid.addCell({
-            type: this.type,
-            element: globalScoresTable.element,
-            row: 4,
-            rowSpan: 5,
-            column: 12,
-            columnSpan: 5
-        })
+        // grid.addCell({
+        //     type: this.type,
+        //     element: globalScoresTable.tableElement,
+        //     row: 4,
+        //     rowSpan: 5,
+        //     column: 12,
+        //     columnSpan: 5
+        // })
         grid.addCell({
             type: this.type,
             element: rightTitle,
@@ -238,12 +266,15 @@ export class MainMenuView extends View {
         });
 
 
-
-
-
-
-    }
-    public hideCells(grid: Grid): void {
     }
 
+
+
+    public onHide(): void {
+
+    }
+
+    public onDestroy(): void {
+
+    }
 }

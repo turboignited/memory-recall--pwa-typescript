@@ -1,20 +1,51 @@
 {
     "sprites": {
-        "total": 10,
+        "total": 36,
         "all": [
             {
                 "name": "numbers",
                 "urls": [
-                    "images/sprites/numbers-0.png",
-                    "images/sprites/numbers-1.png",
-                    "images/sprites/numbers-2.png",
-                    "images/sprites/numbers-3.png",
-                    "images/sprites/numbers-4.png",
-                    "images/sprites/numbers-5.png",
-                    "images/sprites/numbers-6.png",
-                    "images/sprites/numbers-7.png",
-                    "images/sprites/numbers-8.png",
-                    "images/sprites/numbers-9.png"
+                    "images/sprites/numbers/numbers-0.png",
+                    "images/sprites/numbers/numbers-1.png",
+                    "images/sprites/numbers/numbers-2.png",
+                    "images/sprites/numbers/numbers-3.png",
+                    "images/sprites/numbers/numbers-4.png",
+                    "images/sprites/numbers/numbers-5.png",
+                    "images/sprites/numbers/numbers-6.png",
+                    "images/sprites/numbers/numbers-7.png",
+                    "images/sprites/numbers/numbers-8.png",
+                    "images/sprites/numbers/numbers-9.png"
+                ]
+            },
+            {
+                "name": "letters",
+                "urls": [
+                    "images/sprites/letters/letters-a.png",
+                    "images/sprites/letters/letters-b.png",
+                    "images/sprites/letters/letters-c.png",
+                    "images/sprites/letters/letters-d.png",
+                    "images/sprites/letters/letters-e.png",
+                    "images/sprites/letters/letters-f.png",
+                    "images/sprites/letters/letters-g.png",
+                    "images/sprites/letters/letters-h.png",
+                    "images/sprites/letters/letters-i.png",
+                    "images/sprites/letters/letters-j.png",
+                    "images/sprites/letters/letters-k.png",
+                    "images/sprites/letters/letters-l.png",
+                    "images/sprites/letters/letters-m.png",
+                    "images/sprites/letters/letters-n.png",
+                    "images/sprites/letters/letters-o.png",
+                    "images/sprites/letters/letters-p.png",
+                    "images/sprites/letters/letters-q.png",
+                    "images/sprites/letters/letters-r.png",
+                    "images/sprites/letters/letters-s.png",
+                    "images/sprites/letters/letters-t.png",
+                    "images/sprites/letters/letters-u.png",
+                    "images/sprites/letters/letters-v.png",
+                    "images/sprites/letters/letters-w.png",
+                    "images/sprites/letters/letters-x.png",
+                    "images/sprites/letters/letters-y.png",
+                    "images/sprites/letters/letters-z.png"                     
                 ]
             }
         ]

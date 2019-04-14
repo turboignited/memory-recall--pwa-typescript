@@ -7,6 +7,7 @@ import { App } from "../app";
 import { Button } from "../ui/components";
 import { GameLogic } from "../game/game_logic";
 import { Sprite } from "../assets/sprite";
+import { Score } from "../storage/preferences";
 
 /**
  * @implements View
@@ -19,28 +20,32 @@ export class GameView extends View {
         super(type);
         this._game = new Game({
             logic: new GameLogic({
-                callback: (success: boolean, score: number, times: number[]) => {
-                    this.onGameCompleted(success, score, times);
+                callback: (success: boolean, score: number, time: number) => {
+                    this.onGameCompleted(success, score, time);
                 },
                 cellSize: App.dimensions.gcd,
                 columns: App.dimensions.width / App.dimensions.gcd,
-                rows: (App.dimensions.height / App.dimensions.gcd) - 1
+                rows: (App.dimensions.height / App.dimensions.gcd) - 2
             })
         });
     }
 
-    public onGameCompleted(success: boolean, score: number, times: number[]) {
-        console.log(`Game Complete: Success: ${success}, Score: ${score}, Times: ${JSON.stringify(times, null, 4)}`);
-        this._game.quit();
-        App.preferences.increaseScore(App.preferences.activeSprite);
-        const sprites: Sprite[] = [];
-        const activeSprite = App.preferences.activeSprite;
+    public onGameCompleted(success: boolean, score: number, time: number) {
 
-        for (let i = 0; i < App.preferences.getScore(activeSprite); i++) {
-            sprites.push(App.assets.sprites.getRandomSprite(activeSprite));
+        console.log(`Game Complete: Success: ${success}, Score: ${score}, Time: ${time}`);
+        const newScore: Score = {
+            score: score,
+            time: time,
+            type: App.preferences.activeSprite
+        };
+        if (success) {
+            this._game.quit();
+            App.preferences.saveScore(newScore);
+            App.views.setView(ViewType.Success);
+        } else {
+            this._game.pause();
+            App.views.setView(ViewType.Fail);
         }
-
-        this._game.start(sprites);
     }
 
     public onDestroy(): void {
@@ -58,12 +63,15 @@ export class GameView extends View {
             this._game.resume();
         } else {
             const sprites: Sprite[] = [];
+            let spriteCount: number;
             const activeSprite = App.preferences.activeSprite;
-
-            // for (let i = 0; i < App.preferences.getScore(activeSprite); i++) {
-            //     sprites.push(App.assets.sprites.getRandomSprite(activeSprite));
-            // }
-            for (let i = 0; i < 100; i++) {
+            const currentScore = App.preferences.getScore(activeSprite);
+            if (currentScore != null) {
+                spriteCount = currentScore.score + 1;
+            } else {
+                spriteCount = App.preferences.minimumScore;
+            }
+            for (let i = 0; i < spriteCount; i++) {
                 sprites.push(App.assets.sprites.getRandomSprite(activeSprite));
             }
             this._game.start(sprites);

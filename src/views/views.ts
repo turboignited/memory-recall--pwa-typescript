@@ -8,6 +8,8 @@ import { Loader } from "../utils/loader";
 import { App } from "../app";
 import { HelpView } from "./help_view";
 import { AssetType } from "../assets/asset_type";
+import { FailView } from "./fail_view";
+import { SuccessView } from "./success_view";
 
 export class Views {
     // Used to keep track of active view
@@ -22,6 +24,8 @@ export class Views {
         this._views.set(ViewType.Game, new GameView(ViewType.Game));
         this._views.set(ViewType.Pause, new PauseView(ViewType.Pause));
         this._views.set(ViewType.Help, new HelpView(ViewType.Help));
+        this._views.set(ViewType.Success, new SuccessView(ViewType.Success));
+        this._views.set(ViewType.Fail, new FailView(ViewType.Fail));
     }
 
     /**
