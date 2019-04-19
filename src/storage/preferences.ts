@@ -13,6 +13,7 @@ export class Preferences {
     private readonly _activeSpriteKey: string = "activeSprite";
     private readonly _termsKey: string = "termsAndConditions";
     private _lastSavedScore: Score | undefined;
+    public online: boolean = false;
     public get lastSavedScore(): Score | undefined {
         return this._lastSavedScore;
     }

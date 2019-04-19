@@ -51,8 +51,9 @@ export class App {
     }
 
     constructor(context: CanvasRenderingContext2D, width: number, height: number, loader: Loader<AssetType>) {
-        const dimensions = new Dimensions(width, height, App.maximumWidth, App.maximumHeight);
-        App._dimensions = dimensions
+        const dimensions: Dimensions = new Dimensions(width, height, App.maximumWidth, App.maximumHeight);
+
+        App._dimensions = dimensions;
         App._context = context;
         App._grid = new Grid(context.canvas, dimensions);
         App._preferences = new Preferences();
@@ -71,6 +72,7 @@ export class App {
             App._context.canvas.style.transformOrigin = "top left"; //scale from top left
             App._context.canvas.style.transform = `scale(${App._dimensions.scale})`;
         };
-
     }
+
+
 }

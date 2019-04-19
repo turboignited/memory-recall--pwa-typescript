@@ -4,7 +4,7 @@ import { Game } from "../game/game";
 import { GameState } from "../game/game_state";
 import { Grid } from "../ui/grid";
 import { App } from "../app";
-import { Button } from "../ui/components";
+import { ButtonComponent } from "../ui/components";
 import { GameLogic } from "../game/game_logic";
 import { Sprite } from "../assets/sprite";
 import { Score } from "../storage/preferences";
@@ -81,6 +81,7 @@ export class GameView extends View {
     public render(context: CanvasRenderingContext2D): void {
         this._game.render(context);
     }
+    
     public reset(): void {
         if (this._game.state == GameState.Paused) {
             this._game.restart();
@@ -88,7 +89,7 @@ export class GameView extends View {
     }
 
     public createCells(grid: Grid): void {
-        const pauseButton = Button("||", () => {
+        const pauseButton = ButtonComponent("||", () => {
             if (this._game.state == GameState.Playing) {
                 this._game.pause();
                 App.views.setView(ViewType.Pause);
@@ -99,8 +100,8 @@ export class GameView extends View {
             type: this.type,
             element: pauseButton,
             row: grid.rows,
-            column: grid.columns * 0.5,
-            columnSpan: 2,
+            column: Math.floor(grid.columns * 0.5),
+            columnSpan: 3,
             rowSpan: 1
         });
 

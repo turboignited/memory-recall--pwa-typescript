@@ -1,3 +1,5 @@
+import { TableComponent } from "./components";
+
 export class Table {
     private _tableElement: HTMLTableElement;
     private _highlightedRow: number | undefined;
@@ -9,21 +11,13 @@ export class Table {
     }
 
     constructor(headings: HTMLElement[]) {
-        const table = document.createElement("table");
+        const table = TableComponent();
         const row = table.insertRow();
         for (let i = 0; i < headings.length; i++) {
             const cell = row.insertCell(i);
             cell.appendChild(headings[i]);
-            // cell.style.width="100%";
-            cell.style.textAlign = "left";
-            if (i % 2 == 0) {
-                cell.style.backgroundColor = "#f2f2f2";
-            }
             cell.style.border = "1px solid black"
         }
-        table.style.overflowY = "scroll"
-        table.style.borderCollapse = "collapse";
-        table.style.width = "100%";
         this._tableElement = table;
     }
 
@@ -57,12 +51,13 @@ export class Table {
     }
 
     public getCell(row: number, column: number): HTMLTableCellElement | undefined {
-        if (row >= 0 && row < this._tableElement.rows.length) {
-            const cell = this._tableElement.rows[row].cells[column];
-            return cell;
+        const cellRow = this.getRow(row);
+        if (cellRow != undefined) {
+            return cellRow.cells[column];
         }
         return undefined;
     }
+
 
     public editCell(row: number, column: number, cell: HTMLElement): HTMLTableCellElement | undefined {
         const existingCell = this.getCell(row, column);

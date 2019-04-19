@@ -91,6 +91,5 @@ export class Rendering {
         args.context.font = "50px serif";
         args.context.textAlign = "center";
         args.context.fillText(`${(args.percent * 100).toFixed(2)}%`, args.width * 0.5, args.height * 0.5, args.width);
-
     }
 }

@@ -1,7 +1,7 @@
 import { View } from "./view";
 import { Grid } from "../ui/grid";
 import { App } from "../app";
-import { Button } from "../ui/components";
+import { ButtonComponent } from "../ui/components";
 import { ViewType } from "./view_type";
 
 
@@ -20,10 +20,10 @@ export class SuccessView extends View {
         }
     }
     public createCells(grid: Grid): void {
-        const nextButton = Button("Next", () => {
+        const nextButton = ButtonComponent("Next", () => {
             App.views.setView(ViewType.Game);
         });
-        const quitButton = Button("Quit", () => {
+        const quitButton = ButtonComponent("Quit", () => {
             const gameView = App.views.getView(ViewType.Game);
             if (gameView != undefined) {
                 gameView.destroy();
@@ -33,17 +33,17 @@ export class SuccessView extends View {
         grid.addCell({
             type: this.type,
             element: nextButton,
-            row: 5,
-            column: grid.columns * 0.5,
-            columnSpan: 2,
+            row: Math.floor(grid.rows * 0.5),
+            column: Math.floor(grid.columns * 0.5),
+            columnSpan: 3,
             rowSpan: 1
         });
         grid.addCell({
             type: this.type,
             element: quitButton,
-            row: 7,
-            column: grid.columns * 0.5,
-            columnSpan: 2,
+            row: Math.floor(grid.rows * 0.5) + 2,
+            column: Math.floor(grid.columns * 0.5),
+            columnSpan: 3,
             rowSpan: 1
         });
     }

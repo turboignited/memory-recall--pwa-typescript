@@ -123,6 +123,7 @@ export class GameLogic implements Logic {
             this._activeSprites.splice(0, this._activeSprites.length);
             for (let i = 0; i < sprites.length; i++) {
                 this._activeSprites[i] = sprites[i];
+                this._activeSprites[i].alpha = 0.0;
                 this._activeSprites[i].position = availablePositions[i];
             }
             clearInterval(this._revealInterval);
@@ -296,7 +297,7 @@ export class GameLogic implements Logic {
             columns: this._columns,
             rows: this._rows + 1,
             rowOffset: 1,
-            strokeColour: "black",
+            strokeColour: "#199EFF",
             strokeWidth: 1.5
         });
         this._state = GameLogicState.Reveal;

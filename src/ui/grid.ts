@@ -1,14 +1,14 @@
-import { App } from "../app";
 import { ViewType } from "../views/view_type";
 import { AddCellArgs } from "./grid_arguments";
 import { Dimensions } from "../utils/dimensions";
+import { ContainerComponent } from "./components";
 
 export class Grid {
-    private _container: HTMLDivElement;
+    private _container: HTMLElement;
     private _columns: number;
     private _rows: number;
     private _cells: HTMLElement[][];
-    public get container(): HTMLDivElement {
+    public get container(): HTMLElement {
         return this._container;
     }
     public get columns(): number {
@@ -28,7 +28,7 @@ export class Grid {
     }
 
     constructor(background: HTMLElement, dimensions: Dimensions) {
-        const container = document.createElement("div");
+        const container = ContainerComponent();
         const rows = dimensions.height / dimensions.gcd;
         const columns = dimensions.width / dimensions.gcd;
         container.style.display = "grid";
@@ -37,10 +37,10 @@ export class Grid {
         container.style.height = `${dimensions.height * dimensions.scale}px`;
         container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
         container.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-
-        background.style.border = "1px solid #0C6DB3";
-        background.style.backgroundColor = "#199EFF";
-
+        container.style.gridGap="8px";
+        container.style.border = "1px solid #0C6DB3";
+        container.style.background = "linear-gradient(180deg, #4CCC14, #199EFF)";
+       
         background.style.zIndex = "0";
         background.style.gridRow = `${1} / span ${rows}`;
         background.style.msGridRow = `${1} / span ${rows}`;
@@ -65,9 +65,6 @@ export class Grid {
         args.element.style.gridColumn = `${args.column} / span ${args.columnSpan ? args.columnSpan : 1}`;
         args.element.style.msGridColumn = `${args.column} / span ${args.columnSpan ? args.columnSpan : 1}`;
         args.element.style.zIndex = "0";
-        args.element.style.border = "1px solid #0C6DB3";
-        args.element.style.verticalAlign = "center";
-        args.element.style.borderRadius="18px";
         if (this._cells[args.type] == undefined) {
             this._cells[args.type] = [];
         }

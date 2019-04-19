@@ -2,13 +2,14 @@ import { App } from "./app";
 import { Loader } from "./utils/loader";
 import { ViewType } from "./views/view_type";
 import { AssetType } from "./assets/asset_type";
+import { ParagraphComponent, CanvasComponent } from "./ui/components";
 
 
 const createApp = (context: CanvasRenderingContext2D) => {
     console.log("Creating App");
     const loader = new Loader<AssetType>();
 
-    new App(context, 1280, 720, loader);
+    new App(context, 720, 1280, loader);
     loader.setCompletedListener(() => {
         console.log("Loaded App");
         loader.reset();
@@ -16,9 +17,7 @@ const createApp = (context: CanvasRenderingContext2D) => {
     });
     loader.setErrorListener(() => {
         console.error("Could not load App");
-        document.body.appendChild(
-            document.createElement("p").appendChild(
-                document.createTextNode("Game could not load assets. If this is your first time using this app please ensure you have a network connection. Cannot continue.")));
+        document.body.appendChild(ParagraphComponent("Game could not load assets. If this is your first time using this app please ensure you have a network connection. Cannot continue."));
         App.views.quit();
     });
 
@@ -34,15 +33,10 @@ const createApp = (context: CanvasRenderingContext2D) => {
 };
 
 const getCanvasContext = (): CanvasRenderingContext2D | null => {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-
+    const context = CanvasComponent().getContext("2d");
     if (context == null) {
-
         console.error("2d canvas context unavailable. Cannot continue.");
-        document.body.appendChild(
-            document.createElement("p").appendChild(
-                document.createTextNode("2d canvas context unavailable. Cannot continue.")));
+        document.body.appendChild(ParagraphComponent("2d canvas context unavailable. Cannot continue."));
         return null;
     }
     return context;
@@ -61,15 +55,14 @@ const registerServiceWorker = () => {
         });
     }
 }
-
-
 window.onload = () => {
     window.onload = null;
+
     document.body.style.height = "100vh";
-    document.body.style.textAlign = "center";
     document.body.style.fontFamily = "Arial";
     document.body.style.overflow = "hidden";
     document.body.style.backgroundColor = "black";
+    
     if (process.env.NODE_ENV == "production") {
         registerServiceWorker();
     }

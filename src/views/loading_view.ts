@@ -36,17 +36,15 @@ export class LoadingView<T> extends View {
     public render(context: CanvasRenderingContext2D): void {
 
         if (this.visible) {
-
-            context.clearRect(0, App.dimensions.height-100, App.dimensions.width, 100);
             Rendering.renderProgressBar({
                 context: context,
                 height: 100,
-                width: App.dimensions.width,
+                width: context.canvas.width,
                 innerFillColour: "blue",
                 outerFillColour: "yellow",
                 percent: this._percentLoaded,
                 x: 0,
-                y: App.dimensions.height - 100
+                y: context.canvas.height - 100
             });
             requestAnimationFrame((time: number) => {
                 this.render(context);

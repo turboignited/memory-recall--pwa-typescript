@@ -2,7 +2,7 @@ import { View } from "./view";
 import { Grid } from "../ui/grid";
 import { ViewType } from "./view_type";
 import { App } from "../app";
-import { Button } from "../ui/components";
+import { ButtonComponent, ContainerComponent } from "../ui/components";
 
 /**
  * @implements View
@@ -18,20 +18,19 @@ export class PauseView extends View {
     }
     public reset(): void { }
     public createCells(grid: Grid): void {
-        const background = document.createElement("div");
-        background.style.boxShadow = "0 0 10px black";
-        const resumeButton = Button("Resume", () => {
+        const background = ContainerComponent();
+        const resumeButton = ButtonComponent("Resume", () => {
             App.views.setView(ViewType.Game);
 
         });
-        const restartButton = Button("Restart", () => {
+        const restartButton = ButtonComponent("Restart", () => {
             const gameView = App.views.getView(ViewType.Game);
             if (gameView != undefined) {
                 gameView.reset();
             }
             App.views.setView(ViewType.Game);
         });
-        const quitButton = Button("Quit", () => {
+        const quitButton = ButtonComponent("Quit", () => {
             const gameView = App.views.getView(ViewType.Game);
             if (gameView != undefined) {
                 gameView.destroy();
@@ -52,25 +51,25 @@ export class PauseView extends View {
         grid.addCell({
             type: this.type,
             element: resumeButton,
-            row: 3,
-            column: grid.columns * 0.5,
-            columnSpan: 2,
+            row: Math.floor(grid.rows * 0.5),
+            column: Math.floor(grid.columns * 0.5),
+            columnSpan: 3,
             rowSpan: 1
         });
         grid.addCell({
             type: this.type,
             element: restartButton,
-            row: 5,
-            column: grid.columns * 0.5,
-            columnSpan: 2,
+            row: Math.floor(grid.rows * 0.5) + 2,
+            column: Math.floor(grid.columns * 0.5),
+            columnSpan: 3,
             rowSpan: 1
         });
         grid.addCell({
             type: this.type,
             element: quitButton,
-            row: 7,
-            column: grid.columns * 0.5,
-            columnSpan: 2,
+            row: Math.floor(grid.rows * 0.5) + 4,
+            column: Math.floor(grid.columns * 0.5),
+            columnSpan: 3,
             rowSpan: 1
         });
 

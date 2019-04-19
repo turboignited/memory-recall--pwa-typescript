@@ -1,10 +1,9 @@
 import { Table } from "./table";
+import { ParagraphComponent } from "./components";
 
 
 const getRandomHTMLElement = (text?: string) => {
-    const paragraph = document.createElement("p");
-    paragraph.innerText = text ? text : Math.random().toString();
-    return paragraph;
+    return ParagraphComponent(text ? text : Math.random().toString());
 }
 
 const createTable = (heading1?: string, heading2?: string): Table => { return new Table([getRandomHTMLElement(heading1), getRandomHTMLElement(heading2)]); }

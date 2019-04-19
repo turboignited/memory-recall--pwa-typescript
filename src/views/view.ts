@@ -15,13 +15,7 @@ export abstract class View {
         this._type = type;
         this._visible = false;
     }
-    /**
-     * Call to load images and other assets for the view
-     * @param loader Required to inform about progress
-     */
-    /**
-     * Call to show the HTML contents of this view
-     */
+ 
     public show(grid: Grid): void {
         if (this._visible) {
             return;
@@ -34,9 +28,6 @@ export abstract class View {
         this.onShow();
     }
 
-    /**
-     * Call to hide the HTML contents of this view
-     */
     public hide(grid: Grid): void {
         if (!this._visible) {
             return;
@@ -46,9 +37,6 @@ export abstract class View {
         this.onHide();
     }
 
-    /**
-     * Call to destroy
-     */
     public destroy(): void {
         this._visible = false;
         this.onDestroy();

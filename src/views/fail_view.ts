@@ -1,7 +1,7 @@
 import { View } from "./view";
 import { Grid } from "../ui/grid";
 import { App } from "../app";
-import { Button } from "../ui/components";
+import { ButtonComponent } from "../ui/components";
 import { ViewType } from "./view_type";
 
 
@@ -13,7 +13,7 @@ export class FailView extends View {
 
     }
     public createCells(grid: Grid): void {
-        const retryButton = Button("Retry", () => {
+        const retryButton = ButtonComponent("Retry", () => {
             const gameView = App.views.getView(ViewType.Game);
             if (gameView != undefined) {
                 gameView.reset();

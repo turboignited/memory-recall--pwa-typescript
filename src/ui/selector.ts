@@ -1,4 +1,5 @@
 import { SpriteTypes } from "../assets/sprite_types";
+import { ButtonComponent, ContainerComponent, Heading2Component } from "./components";
 
 export interface Selection {
     element: HTMLElement;
@@ -9,7 +10,7 @@ export declare type SelectionCallback = (index: number) => void;
 export class Selector {
     private _leftButton: HTMLButtonElement;
     private _rightButton: HTMLButtonElement;
-    private _titleHeading: HTMLHeadElement;
+    private _titleHeading: HTMLHeadingElement;
     private _selectionContainer: HTMLDivElement;
     private _selections: Selection[];
     private _selected: number = 0;
@@ -21,7 +22,7 @@ export class Selector {
     public get rightButton(): HTMLButtonElement {
         return this._rightButton;
     }
-    public get titleHeading(): HTMLHeadElement {
+    public get titleHeading(): HTMLHeadingElement {
         return this._titleHeading;
     }
     public get selectionContainer(): HTMLDivElement {
@@ -41,24 +42,17 @@ export class Selector {
     }
 
     constructor(selections: Selection[], callback: SelectionCallback, selected: number = 0) {
-        const leftButton = document.createElement("button");
-        const rightButton = document.createElement("button");
-        const selectionContainer = document.createElement("div");
-        const titleHeading = document.createElement("h3");
-
-        leftButton.innerText = "<";
-        rightButton.innerText = ">";
-        leftButton.onclick = () => {
+        const leftButton = ButtonComponent("<", () => {
             this.selectPrevious();
-        }
-        rightButton.onclick = () => {
+        });
+        const rightButton = ButtonComponent(">", () => {
             this.selectNext();
-        }
+        });
         this._leftButton = leftButton;
         this._rightButton = rightButton;
-        this._selectionContainer = selectionContainer;
+        this._selectionContainer = ContainerComponent();
         this._selections = selections;
-        this._titleHeading = titleHeading;
+        this._titleHeading = Heading2Component("");
         this._callback = callback;
         this.select(selected);
     }
@@ -95,6 +89,17 @@ export class Selector {
         } else {
             this._selectionContainer.appendChild(selection.element);
         }
+        selection.element.animate([
+            { // from
+                transform: `scale(0.5)`
+            },
+            { // to
+                transform: `scale(1.2)`
+            },
+            { // to
+                transform: `scale(1.0)`
+            }
+        ], 200);
         this._callback(index);
     }
 }
