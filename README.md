@@ -8,11 +8,8 @@
 <img src="screenshots/game-0.7.png" alt="V0.7 Game Screenshot" class="inline"/>
 <img src="screenshots/pause-0.7.png" alt="V0.7 Pause Screenshot" class="inline"/> -->
 
-<img src="screenshots/menu-0.9.png" alt="V0.9 Main Menu Screenshot" class="inline"/>
-<img src="screenshots/game-0.9.png" alt="V0.9 Game Screenshot" class="inline"/>
-<img src="screenshots/pause-0.9.png" alt="V0.9 Pause Screenshot" class="inline"/>
-<img src="screenshots/game-success-0.9.png" alt="V0.9 Game Success Screenshot" class="inline"/>
-<img src="screenshots/game-fail-0.9.png" alt="V0.9 Game Fail Screenshot" class="inline"/>
+| Main Menu | Game | Pause | Success | Fail |
+| <img src="screenshots/menu-0.9.png" alt="V0.9 Main Menu Screenshot"/> | <img src="screenshots/game-0.9.png" alt="V0.9 Game Screenshot" /> | <img src="screenshots/pause-0.9.png" alt="V0.9 Pause Screenshot"/> | <img src="screenshots/game-success-0.9.png" alt="V0.9 Game Success Screenshot"/> | <img src="screenshots/game-fail-0.9.png" alt="V0.9 Game Fail Screenshot"/> |
 
 ## v0.9
 Much has been done to create a good layout which works across many screen sizes and allows a consistent way to design layouts. The project has settled on a consistent 720x1280 pixel layout, it will be useful to easily change this as maintaining this resolution requires scaling. All content is concentrated in the container in the center. Viewing on a device with a lower resolution will scale this container to fit and likewise with a larger resolution device.
