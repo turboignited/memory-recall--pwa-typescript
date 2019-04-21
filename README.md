@@ -27,6 +27,7 @@ npm serve - create production ready public folder and start a simple server. Use
 This projects loads all assets required by the game, providing a view and reporting on progress.
 In production scenerario, after the user has initially loaded the game they can then play it offline.
 Online functionality is reliant on the user accepting the terms and conditions.
+The game attempts to fit within a mobile screen whilst having a predetermined resolution to aid in design.
 
 ## TODO List
 This project is continually being updated.
