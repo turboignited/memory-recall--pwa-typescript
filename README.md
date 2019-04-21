@@ -11,9 +11,13 @@
 <img src="screenshots/menu-0.9.png" alt="V0.9 Main Menu Screenshot" class="inline"/>
 <img src="screenshots/game-0.9.png" alt="V0.9 Game Screenshot" class="inline"/>
 <img src="screenshots/pause-0.9.png" alt="V0.9 Pause Screenshot" class="inline"/>
+<img src="screenshots/game-success-0.9.png" alt="V0.9 Game Success Screenshot" class="inline"/>
+<img src="screenshots/game-fail-0.9.png" alt="V0.9 Game Fail Screenshot" class="inline"/>
 
 ## v0.9
-Much has been done to create a good layout which works across many screen sizes and allows a consistent way to design layouts. The project has settled on a consistent 720x1280 pixel layout, it will be useful to easily change this as maintaining this resolution requires scaling. There is much more to do before v1.0, including incorporating online functionality, aiding with specifying colour, adjusting a few pixels here and there and last but not least, tests.
+Much has been done to create a good layout which works across many screen sizes and allows a consistent way to design layouts. The project has settled on a consistent 720x1280 pixel layout, it will be useful to easily change this as maintaining this resolution requires scaling. All content is concentrated in the container in the center. Viewing on a device with a lower resolution will scale this container to fit and likewise with a larger resolution device.
+
+There is much more to do before v1.0, including incorporating online functionality, aiding with specifying colour, adjusting a few pixels here and there and last but not least, tests.
 
 The service worker is enabled only when building for production and follows the guidelines specified by Google Lighthouse.
 
