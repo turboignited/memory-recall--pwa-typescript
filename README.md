@@ -10,11 +10,11 @@
 
 
 <p float="left">
-  <img src="screenshots/menu-0.9.png" alt="V0.9 Main Menu Screenshot" width="100"/>
-  <img src="screenshots/game-0.9.png" alt="V0.9 Game Screenshot" width="100"/> 
-  <img src="screenshots/pause-0.9.png" alt="V0.9 Pause Screenshot" width="100"/>
-  <img src="screenshots/game-success-0.9.png" alt="V0.9 Game Success Screenshot" width="100"/>
-  <img src="screenshots/game-fail-0.9.png" alt="V0.9 Game Fail Screenshot" width="100"/>
+  <img src="screenshots/menu-0.9.png" alt="V0.9 Main Menu Screenshot" width="20%"/>
+  <img src="screenshots/game-0.9.png" alt="V0.9 Game Screenshot" width="20%"/> 
+  <img src="screenshots/pause-0.9.png" alt="V0.9 Pause Screenshot" width="20%"/>
+  <img src="screenshots/game-success-0.9.png" alt="V0.9 Game Success Screenshot" width="20%"/>
+  <img src="screenshots/game-fail-0.9.png" alt="V0.9 Game Fail Screenshot" width="20%"/>
 </p>
 
 
