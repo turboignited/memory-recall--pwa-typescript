@@ -12,7 +12,7 @@ const context = CanvasComponent().getContext("2d");
 
 if (context != null) {
     const loader = new Loader<AssetType>();
-    const app = new App(context, 1280, 720, loader);
+    const app = new App(context);
 
 
 

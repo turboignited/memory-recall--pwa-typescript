@@ -1,5 +1,5 @@
-import { SpriteTypes } from "../assets/sprite_types";
 import { ButtonComponent, ContainerComponent, Heading2Component } from "./components";
+import { Colours } from "../utils/colours";
 
 export interface Selection {
     element: HTMLElement;
@@ -41,16 +41,18 @@ export class Selector {
         return this._callback;
     }
 
-    constructor(selections: Selection[], callback: SelectionCallback, selected: number = 0) {
-        const leftButton = ButtonComponent("<", () => {
+    constructor(selections: Selection[], callback: SelectionCallback, selected: number) {
+        const leftButton = ButtonComponent("<", Colours.Secondary, () => {
             this.selectPrevious();
         });
-        const rightButton = ButtonComponent(">", () => {
+        const rightButton = ButtonComponent(">", Colours.Secondary, () => {
             this.selectNext();
         });
         this._leftButton = leftButton;
         this._rightButton = rightButton;
         this._selectionContainer = ContainerComponent();
+        this._selectionContainer.style.width = "80px";
+        this._selectionContainer.style.height = "80px";
         this._selections = selections;
         this._titleHeading = Heading2Component("");
         this._callback = callback;
@@ -59,28 +61,34 @@ export class Selector {
 
     public selectPrevious(): void {
         if (this._selected - 1 >= 0) {
-            this._selected--;
+            this.select(this._selected - 1);
         } else {
-            this._selected = this._selections.length - 1;
+            if (this._selections.length == 0) {
+                return;
+            }
+            this.select(this._selections.length - 1);
         }
 
-        this.select(this._selected);
     }
 
     public selectNext(): void {
         if (this._selected + 1 < this._selections.length) {
-            this._selected++;
+            this.select(this._selected + 1);
         } else {
-            this._selected = 0;
+            if (this._selections.length == 0) {
+                return;
+            }
+            this.select(0);
         }
-
-        this.select(this._selected);
     }
 
     public select(index: number): void {
-        if (index > this._selections.length - 1) {
+        if (index < 0 ||
+            this._selections.length == 0 ||
+            index >= this._selections.length) {
             return;
         }
+
         const selection = this._selections[index];
 
         this._titleHeading.innerText = selection.title;
@@ -100,6 +108,8 @@ export class Selector {
                 transform: `scale(1.0)`
             }
         ], 200);
+        this._selected = index;
+
         this._callback(index);
     }
 }

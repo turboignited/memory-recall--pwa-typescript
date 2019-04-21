@@ -1,4 +1,5 @@
 import { TableComponent } from "./components";
+import { Colours } from "../utils/colours";
 
 export class Table {
     private _tableElement: HTMLTableElement;
@@ -15,17 +16,19 @@ export class Table {
         const row = table.insertRow();
         for (let i = 0; i < headings.length; i++) {
             const cell = row.insertCell(i);
+            cell.style.backgroundColor = Colours.Primary;
+            cell.style.border = `2px solid ${Colours.PrimaryLight}`;
             cell.appendChild(headings[i]);
-            cell.style.border = "1px solid black"
         }
         this._tableElement = table;
     }
 
     public addRow(cells: HTMLElement[]): HTMLTableRowElement | undefined {
-        if (cells.length > 0 && cells.length <= this._tableElement.rows[0].cells.length) {
+        if (cells.length > 0) {
             const newRow = this._tableElement.insertRow();
             for (let i = 0; i < cells.length; i++) {
                 const cell = newRow.insertCell(i);
+                cell.style.border = `2px solid ${Colours.PrimaryLight}`;
                 cell.appendChild(cells[i]);
             }
             return newRow;
@@ -33,10 +36,26 @@ export class Table {
         return undefined;
     }
 
+    public addOrReplaceRow(index: number, cells: HTMLElement[]): HTMLTableRowElement | undefined {
+        const row = this.getRow(index);
+        if (row != undefined && row.cells.length == row.cells.length) {
+            for (let i = 0; i < row.cells.length; i++) {
+                const child = row.cells[i].firstChild;
+                if (child != null) {
+                    child.replaceWith(cells[i]);
+                }
+            }
+        } else {
+            this.addRow(cells);
+        }
+        return undefined;
+    }
+
     public addCell(row: number, cell: HTMLElement): HTMLTableCellElement | undefined {
-        if (row > -1 && row < this._tableElement.rows.length) {
+        if (row >= 0 && row < this._tableElement.rows.length) {
             const existingRow = this._tableElement.rows[row];
             const newCell = existingRow.insertCell(existingRow.children.length);
+            newCell.style.border = `2px solid ${Colours.PrimaryLight}`;
             newCell.appendChild(cell);
             return newCell;
         }
@@ -70,6 +89,10 @@ export class Table {
 
     public deleteRow(row: number): boolean {
         if (row >= 0 && row < this._tableElement.rows.length) {
+            if (row == this._highlightedRow) {
+                this._highlightedRow = undefined;
+                this.unhighlightRow(row);
+            }
             this._tableElement.deleteRow(row);
             return true;
         }
@@ -78,11 +101,20 @@ export class Table {
 
     public highlightRow(row: number, colour: string): boolean {
         if (row >= 0 && row < this._tableElement.rows.length) {
-            if (this._tableElement.rows[row].style.backgroundColor !== "") {
-                this._tableElement.rows[row].style.backgroundColor = "";
-            } else {
-                this._tableElement.rows[row].style.backgroundColor = colour;
+            if (row == this._highlightedRow) {
+                return false;
+            } else if (this._highlightedRow != undefined && this._tableElement.rows[this._highlightedRow] != undefined) {
+                this._tableElement.rows[this._highlightedRow].style.backgroundColor = "";
             }
+            this._tableElement.rows[row].style.backgroundColor = colour;
+            this._highlightedRow = row;
+            return true;
+        }
+        return false;
+    }
+    public unhighlightRow(row: number): boolean {
+        if (row >= 0 && row < this._tableElement.rows.length) {
+            this._tableElement.rows[row].style.backgroundColor = "";
             return true;
         }
         return false;

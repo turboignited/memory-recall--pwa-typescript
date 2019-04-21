@@ -1,4 +1,4 @@
-export enum ViewType {
+export const enum ViewType {
     Main,
     Game,
     Pause,

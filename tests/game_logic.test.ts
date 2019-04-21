@@ -12,7 +12,7 @@ const createGameLogicAndInitialize = (cellSize: number, columns: number, rows: n
     });
     const sprites: Sprite[] = [];
     for (let i = 0; i < columns * rows; i++) {
-        sprites.push(new Sprite(ImageComponent(""), new Point(-100, -100)));
+        sprites.push(new Sprite(ImageComponent("", ""), new Point(-100, -100)));
     }
     expect(logic.initialize(sprites)).toBeTruthy();
     return logic;
@@ -22,10 +22,10 @@ describe("initialize", () => {
     test("should create activeSprites equal to length of those passed in.", () => {
         const logic: GameLogic = createGameLogicAndInitialize(80, 2, 2);
         expect(logic.initialize([
-            new Sprite(ImageComponent(""), new Point(-100, -100)),
-            new Sprite(ImageComponent(""), new Point(-100, -100)),
-            new Sprite(ImageComponent(""), new Point(-100, -100)),
-            new Sprite(ImageComponent(""), new Point(-100, -100))])).toBeTruthy();
+            new Sprite(ImageComponent("", ""), new Point(-100, -100)),
+            new Sprite(ImageComponent("", ""), new Point(-100, -100)),
+            new Sprite(ImageComponent("", ""), new Point(-100, -100)),
+            new Sprite(ImageComponent("", ""), new Point(-100, -100))])).toBeTruthy();
         expect(logic.activeSprites.length).toEqual(4);
     });
     test("should set positions of activeSprites to fit within passed in args -1 row", () => {
@@ -47,7 +47,7 @@ describe("initialize", () => {
         const amount: number = 20;
         const sprites: Sprite[] = [];
         for (let i = 0; i < amount; i++) {
-            sprites.push(new Sprite(ImageComponent(""), new Point(-100, -100)));
+            sprites.push(new Sprite(ImageComponent("", ""), new Point(-100, -100)));
         }
         expect(logic.initialize(sprites)).toBeTruthy();
         let positions: Point[] = [];
@@ -75,7 +75,7 @@ describe("initialize", () => {
         });
         const sprites: Sprite[] = [];
         for (let i = 0; i < 5; i++) {
-            sprites.push(new Sprite(ImageComponent(""), new Point(-100, -100)));
+            sprites.push(new Sprite(ImageComponent("", ""), new Point(-100, -100)));
         }
         expect(logic.initialize(sprites)).toBeFalsy();
         sprites.pop();
@@ -90,7 +90,7 @@ describe("initialize", () => {
         });
         const sprites: Sprite[] = [];
         for (let i = 0; i < 4; i++) {
-            sprites.push(new Sprite(ImageComponent(""), new Point(-100, -100)));
+            sprites.push(new Sprite(ImageComponent("", ""), new Point(-100, -100)));
         }
         expect(logic.initialize(sprites)).toBeTruthy();
         logic.activeSprites.forEach((sprite: Sprite) => {

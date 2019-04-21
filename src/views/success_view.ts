@@ -1,52 +1,63 @@
 import { View } from "./view";
-import { Grid } from "../ui/grid";
-import { App } from "../app";
-import { ButtonComponent } from "../ui/components";
+import { Layout } from "../ui/layout";
+import { GridLayout } from "../ui/grid_layout";
+import { ContainerComponent, ButtonComponent } from "../ui/components";
+import { Colours } from "../utils/colours";
 import { ViewType } from "./view_type";
 
-
+/**
+ * @implements View
+ */
 export class SuccessView extends View {
     public reset(): void {
 
     }
     public render(context: CanvasRenderingContext2D): void {
-        const score = App.preferences.lastSavedScore;
-        if (score != undefined) {
-            context.textAlign = "center";
-            context.font = "60 serif";
-            context.fillText(`Mode: ${score.type}`, App.dimensions.width * 0.5, App.dimensions.height * 0.2, App.dimensions.width);
-            context.fillText(`Score: ${score.score}`, App.dimensions.width * 0.5, App.dimensions.height * 0.4, App.dimensions.width);
-            context.fillText(`Time: ${score.time}`, App.dimensions.width * 0.5, App.dimensions.height * 0.6, App.dimensions.width);
-        }
+        // const score = App.preferences.lastSavedScore;
+        // if (score != undefined) {
+        //     context.textAlign = "center";
+        //     context.font = "60 serif";
+        //     context.fillText(`Mode: ${score.type}`, App.dimensions.width * 0.5, App.dimensions.height * 0.2, App.dimensions.width);
+        //     context.fillText(`Score: ${score.score}`, App.dimensions.width * 0.5, App.dimensions.height * 0.4, App.dimensions.width);
+        //     context.fillText(`Time: ${score.time}`, App.dimensions.width * 0.5, App.dimensions.height * 0.6, App.dimensions.width);
+        // }
     }
-    public createCells(grid: Grid): void {
-        const nextButton = ButtonComponent("Next", () => {
-            App.views.setView(ViewType.Game);
-        });
-        const quitButton = ButtonComponent("Quit", () => {
-            const gameView = App.views.getView(ViewType.Game);
-            if (gameView != undefined) {
-                gameView.destroy();
-            }
-            App.views.setView(ViewType.Main);
-        });
-        grid.addCell({
-            type: this.type,
-            element: nextButton,
-            row: Math.floor(grid.rows * 0.5),
-            column: Math.floor(grid.columns * 0.5),
+
+    public createLayout(): Layout | void {
+        const grid = new GridLayout();
+        const container = ContainerComponent();
+        container.style.backgroundColor=Colours.PrimaryLight;
+
+        grid.add({
+            element: container,
+            column: 3,
+            row: 5,
+            rowSpan: 7,
+            columnSpan: 5
+        })
+
+        grid.add({
+            column: 4,
+            row: 8,
             columnSpan: 3,
-            rowSpan: 1
+            element: ButtonComponent("Next", Colours.Secondary, () => {
+                View.views.resetView(ViewType.Game);
+                View.views.setView(ViewType.Game);
+            })
         });
-        grid.addCell({
-            type: this.type,
-            element: quitButton,
-            row: Math.floor(grid.rows * 0.5) + 2,
-            column: Math.floor(grid.columns * 0.5),
+
+        grid.add({
+            column: 4,
+            row: 10,
             columnSpan: 3,
-            rowSpan: 1
+            element: ButtonComponent("Exit", Colours.Red, () => {
+                View.views.destroyView(ViewType.Game);
+                View.views.setView(ViewType.Main);
+            })
         });
+        return grid;
     }
+   
     public onShow(): void {
 
     }

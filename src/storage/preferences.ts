@@ -1,30 +1,24 @@
 import { LocalStorage } from "./local";
 import { SpriteTypes } from "../assets/sprite_types";
-import { App } from "../app";
-
-export interface Score {
-    type: SpriteTypes;
-    score: number;
-    time: number;
-}
+import { Score } from "./score";
 
 export class Preferences {
-    private readonly _scoreKey: string = "score";
-    private readonly _activeSpriteKey: string = "activeSprite";
-    private readonly _termsKey: string = "termsAndConditions";
-    private _lastSavedScore: Score | undefined;
-    public online: boolean = false;
-    public get lastSavedScore(): Score | undefined {
+    private static readonly _scoreKey: string = "score";
+    private static readonly _activeSpriteKey: string = "activeSprite";
+    private static readonly _termsKey: string = "termsAndConditions";
+    private static _lastSavedScore: Score | undefined;
+    public static online: boolean = false;
+    public static get lastSavedScore(): Score | undefined {
         return this._lastSavedScore;
     }
-    private readonly _minimumScore: number = 1;
-    public get minimumScore(): number {
+    private static readonly _minimumScore: number = 1;
+    public static get minimumScore(): number {
         return this._minimumScore;
     }
     /**
      * Should not exceed the amount of available spaces in the game.
      */
-    private _maximumScore: number = (App.dimensions.width / App.dimensions.gcd) * ((App.dimensions.height / App.dimensions.gcd) - 2);
+    private static _maximumScore: number = 10;
 
     /**
      * Attempt to parse the score from local storage.
@@ -32,7 +26,7 @@ export class Preferences {
      * @param type Which mode was the score saved with
      * @returns Score | null
      */
-    public getScore(type: SpriteTypes): Score | null {
+    public static getScore(type: SpriteTypes): Score | null {
         const score = LocalStorage.getValue(`${this._scoreKey}${type}`);
         if (score != null) {
             const parsed: Score = JSON.parse(score);
@@ -46,37 +40,34 @@ export class Preferences {
         return null;
     }
 
-    public getScores(): Score[] {
+    public static getScores(): Score[] {
         let scores: Score[] = [];
-        let score = LocalStorage.getValue(`${this._scoreKey}${SpriteTypes.Numbers}`);
-        let parsed: Score;
-        if (score != null) {
-            parsed = JSON.parse(score);
-            if (parsed.score > this._maximumScore) {
-                parsed.score = this._maximumScore;
-            } else if (parsed.score < this._minimumScore) {
-                parsed.score = this._minimumScore;
-            }
-            scores.push(parsed);
-        }
 
-        score = LocalStorage.getValue(`${this._scoreKey}${SpriteTypes.Letters}`);
-        if (score != null) {
-            parsed = JSON.parse(score);
-            if (parsed.score > this._maximumScore) {
-                parsed.score = this._maximumScore;
-            } else if (parsed.score < this._minimumScore) {
-                parsed.score = this._minimumScore;
+
+        Object.values(SpriteTypes).map((value: string) => {
+            const num = parseInt(value);
+            if (!isNaN(num)) {
+                let score = LocalStorage.getValue(`${this._scoreKey}${num}`);
+                let parsed: Score;
+                if (score != null) {
+                    parsed = JSON.parse(score);
+                    if (parsed.score > this._maximumScore) {
+                        parsed.score = this._maximumScore;
+                    } else if (parsed.score < this._minimumScore) {
+                        parsed.score = this._minimumScore;
+                    }
+                    scores.push(parsed);
+                }
             }
-            scores.push(parsed);
-        }
+        });
         return scores;
     }
-    public deleteScore(type: SpriteTypes): void {
+    
+    public static deleteScore(type: SpriteTypes): void {
         LocalStorage.removeKey(`${this._scoreKey}${type}`);
     }
 
-    public saveScore(score: Score): void {
+    public static saveScore(score: Score): void {
         if (score.score >= this._minimumScore && score.score <= this._maximumScore) {
             console.log(`SaveScore: ${score}`);
             const str = JSON.stringify(score, null, 4);
@@ -88,7 +79,7 @@ export class Preferences {
      * Terms and Conditions
      */
 
-    public toggleTermsAndConditions(): void {
+    public static toggleTermsAndConditions(): void {
         if (this.termsAccepted) {
             LocalStorage.setValue(this._termsKey, "false");
         } else {
@@ -96,7 +87,7 @@ export class Preferences {
         }
     }
 
-    public get termsAccepted(): boolean {
+    public static get termsAccepted(): boolean {
         const accepted = LocalStorage.getValue(this._termsKey);
         if (accepted != null) {
             if (accepted == "true") {
@@ -110,11 +101,11 @@ export class Preferences {
      * SpriteTypes
      */
 
-    public setActiveSprite(type: SpriteTypes): void {
+    public static setActiveSprite(type: SpriteTypes): void {
         LocalStorage.setValue(this._activeSpriteKey, type.toString());
     }
 
-    public get activeSprite(): SpriteTypes {
+    public static get activeSprite(): SpriteTypes {
         const type = LocalStorage.getValue(this._activeSpriteKey);
         if (type != null) {
             const parsed = parseInt(type);

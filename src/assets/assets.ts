@@ -3,11 +3,12 @@ import { Sprites } from "./sprites";
 import { AssetType } from "./asset_type";
 
 export class Assets {
-    private _sprites: Sprites;
-    public get sprites(): Sprites {
+    private static _sprites: Sprites;
+    public static get sprites(): Sprites {
         return this._sprites;
     }
-    constructor(loader: Loader<AssetType>) {
+
+    public static load(loader: Loader<AssetType>): void {
         this._sprites = new Sprites(loader);
     }
 }

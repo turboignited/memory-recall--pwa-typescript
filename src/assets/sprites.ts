@@ -4,6 +4,7 @@ import { SpriteTypes } from "./sprite_types";
 import { Loader } from "../utils/loader";
 import { Point } from "../utils/point";
 import { AssetType } from "./asset_type";
+import { ImageComponent } from "../ui/components";
 
 export class Sprites {
 
@@ -37,20 +38,17 @@ export class Sprites {
                 }
             }
             for (let j = 0; j < sprites.all[i].urls.length; j++) {
-                const image = new Image();
-                image.onload = (ev: any) => {
-                    image.onerror = null;
-                    image.onload = null;
-                    loader.load(AssetType.sprites);
+                const image = ImageComponent({
+                    src: sprites.all[i].urls[j],
+                    alt: `sprites.all[i].name ${j}`,
+                    onerror: () => {
+                        loader.error(AssetType.sprites);
+                    },
+                    onload: () => {
+                        loader.load(AssetType.sprites);
+                    }
                 }
-
-                image.onerror = (ev: any) => {
-                    image.onerror = null;
-                    image.onload = null;
-                    loader.error(AssetType.sprites);
-                }
-
-                image.src = sprites.all[i].urls[j];
+                );
                 this._sprites[i].push(new Sprite(image, new Point(-100, -100)));
             }
         }

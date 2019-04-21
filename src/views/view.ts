@@ -1,9 +1,16 @@
 import { ViewType } from "./view_type";
-import { Grid } from "../ui/grid";
+import { Views } from "./views";
+import { Container } from "../ui/container";
+import { Layout } from "../ui/layout";
 
 export abstract class View {
     private _type: ViewType;
     private _visible: boolean;
+    private static _views: Views;
+
+    public static get views(): Views {
+        return this._views;
+    }
     public get visible(): boolean {
         return this._visible;
     }
@@ -11,40 +18,44 @@ export abstract class View {
         return this._type;
     }
 
-    constructor(type: ViewType) {
+    constructor(type: ViewType, views: Views) {
+        View._views = views;
         this._type = type;
         this._visible = false;
     }
- 
-    public show(grid: Grid): void {
+
+    public show(container: Container<ViewType>): void {
         if (this._visible) {
             return;
         }
-        this._visible = true;
-        if (!grid.contains(this.type)) {
-            this.createCells(grid);
+        if (!container.layoutExists(this.type)) {
+            const layout = this.createLayout();
+            if (layout != undefined) {
+                container.addLayout(this.type, layout);
+            }
         }
-        grid.showCells(this.type);
+        container.showLayout(this.type);
+        this._visible = true;
         this.onShow();
     }
 
-    public hide(grid: Grid): void {
+    public hide(container: Container<ViewType>): void {
         if (!this._visible) {
             return;
         }
+        container.hideLayout(this.type);
         this._visible = false;
-        grid.hideCells(this.type);
         this.onHide();
     }
 
-    public destroy(): void {
+    public destroy(container: Container<ViewType>): void {
+        container.deleteLayout(this.type);
         this._visible = false;
         this.onDestroy();
     }
-
+    public abstract createLayout(): Layout | void;
     public abstract reset(): void;
     public abstract render(context: CanvasRenderingContext2D): void;
-    public abstract createCells(grid: Grid): void;
     public abstract onShow(): void;
     public abstract onHide(): void;
     public abstract onDestroy(): void;

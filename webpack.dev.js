@@ -7,7 +7,8 @@ module.exports = merge(common, {
     devtool: "inline-source-map",
     devServer: {
         contentBase: path.resolve(__dirname, "public"),
-        publicPath: "/scripts/",
-        open: true
+
+        // host: "192.168.1.76",
+        // port: 80
     }
 });

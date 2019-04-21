@@ -86,10 +86,6 @@ export class Rendering {
         args.context.fillStyle = args.outerFillColour;
         args.context.fillRect(args.x, args.y, args.width, args.height);
         args.context.fillStyle = args.innerFillColour;
-        args.context.fillRect(args.x + 20, args.y + 20, (args.width - 20) * args.percent, args.height - 20);
-        args.context.fillStyle = "black";
-        args.context.font = "50px serif";
-        args.context.textAlign = "center";
-        args.context.fillText(`${(args.percent * 100).toFixed(2)}%`, args.width * 0.5, args.height * 0.5, args.width);
+        args.context.fillRect(args.x + 10, args.y + 10, (args.width - 20) * args.percent, args.height - 20);
     }
 }

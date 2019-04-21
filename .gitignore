@@ -8,9 +8,10 @@ firebase.json
 .firebase
 
 # Webpack
-public/scripts
-
-
+public/manifest.json
+public/index.js
+public/precache-manifest.*
+public/service-worker.js
 # Logs
 logs
 *.log

@@ -1,15 +1,15 @@
 import { GameState } from "./game_state";
-import { Logic } from "./logic";
 import { Sprite } from "../assets/sprite";
+import { GameLogic } from "./game_logic";
 export interface GameConstructorArgs {
-    logic: Logic;
+    logic: GameLogic;
 }
 export class Game {
     private _state: GameState;
     private _animationFrame: number;
-    private _logic: Logic;
+    private _logic: GameLogic;
 
-    public get logic(): Logic {
+    public get logic(): GameLogic {
         return this._logic;
     }
 

@@ -1,8 +1,8 @@
 import { GameLogicState } from "./game_logic_state";
 import { Sprite } from "../assets/sprite";
 import { Point } from "../utils/point";
-import { Logic } from "./logic";
 import { Rendering } from "../render/rendering";
+import { Colours } from "../utils/colours";
 
 export interface GameLogicConstructor {
     columns: number;
@@ -14,7 +14,7 @@ export declare type GameLogicCompletedCallback = (success: boolean, score: numbe
 /**
  * @implements Logic
  */
-export class GameLogic implements Logic {
+export class GameLogic {
     private _state: GameLogicState;
     public get state(): GameLogicState {
         return this._state;
@@ -63,10 +63,6 @@ export class GameLogic implements Logic {
     public get selected(): Point | undefined {
         return this._selected;
     }
-    private _listening: boolean;
-    public get listening(): boolean {
-        return this._listening;
-    }
     private _startTime: number;
     public get startTime(): number {
         return this._startTime;
@@ -98,7 +94,6 @@ export class GameLogic implements Logic {
         }
         this._state = GameLogicState.None;
         this._activeSprites = [];
-        this._listening = false;
         this._shouldRender = false;
         this._shouldUpdate = false;
         this._revealed = 0;
@@ -267,14 +262,6 @@ export class GameLogic implements Logic {
         }
     }
 
-    public setCanvasClickListener(canvas: HTMLCanvasElement): void {
-        canvas.addEventListener("click", (ev: MouseEvent) => {
-
-            this.onCanvasClicked(ev);
-        }, false);
-        this._listening = true;
-    }
-
     /**
      * 
      * Render Functions
@@ -289,8 +276,7 @@ export class GameLogic implements Logic {
      */
     public renderNoneState(context: CanvasRenderingContext2D): void {
         context.globalAlpha = 1.0;
-
-        context.clearRect(0, 0, this._cellSize * this._columns, this._cellSize * this._rows);
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         Rendering.renderGrid({
             context: context,
             cellSize: this._cellSize,
@@ -305,58 +291,55 @@ export class GameLogic implements Logic {
     }
 
     public renderSelectState(context: CanvasRenderingContext2D): void {
-        if (!this._listening) {
-            this.setCanvasClickListener(context.canvas);
-        } else {
-            if (this._selected != undefined) {
 
-                if (this.verifySelection(this._selected)) {
-                    Rendering.renderTickAt({
+        if (this._selected != undefined) {
+
+            if (this.verifySelection(this._selected)) {
+                Rendering.renderTickAt({
+                    context: context,
+                    position: this._selected,
+                    size: this._cellSize,
+                    strokeColour: "green",
+                    strokeWidth: 6
+                });
+
+
+
+                this._correct++;
+
+                if (this._correct > 1) {
+                    Rendering.renderLine({
                         context: context,
-                        position: this._selected,
-                        size: this._cellSize,
+                        from: this._activeSprites[this._correct - 2].position,
+                        to: this._activeSprites[this._correct - 1].position,
+                        offset: this._cellSize * 0.5,
                         strokeColour: "green",
                         strokeWidth: 6
                     });
-
-
-
-                    this._correct++;
-
-                    if (this._correct > 1) {
-                        Rendering.renderLine({
-                            context: context,
-                            from: this._activeSprites[this._correct - 2].position,
-                            to: this._activeSprites[this._correct - 1].position,
-                            offset: this._cellSize * 0.5,
-                            strokeColour: "green",
-                            strokeWidth: 6
-                        });
-                    } else {
-                        this._startTime = Date.now();
-                    }
-                    if (this._correct == this._activeSprites.length) {
-                        this._state = GameLogicState.Success;
-                    }
-                    this._shouldUpdate = true;
                 } else {
-                    Rendering.renderCrossAt({
-                        context: context,
-                        position: this._selected,
-                        size: this._cellSize,
-                        strokeColour: "red",
-                        strokeWidth: 6
-                    });
-                    this._state = GameLogicState.Fail;
-                    this._shouldUpdate = true;
+                    this._startTime = Date.now();
                 }
-                this._selected = undefined;
+                if (this._correct == this._activeSprites.length) {
+                    this._state = GameLogicState.Success;
+                }
+                this._shouldUpdate = true;
+            } else {
+                Rendering.renderCrossAt({
+                    context: context,
+                    position: this._selected,
+                    size: this._cellSize,
+                    strokeColour: "red",
+                    strokeWidth: 6
+                });
+                this._state = GameLogicState.Fail;
+                this._shouldUpdate = true;
             }
+            this._selected = undefined;
         }
+
     }
 
     public onPositionSelected(position: Point): void {
-
 
         if (this.spriteExistsAt(position)) {
 
@@ -378,7 +361,7 @@ export class GameLogic implements Logic {
         const sprite = this._activeSprites[this._revealed];
         if (sprite.alpha == 1) {
             this._revealed++;
-            context.fillStyle = "black";
+            context.fillStyle = Colours.Secondary;
             context.font = `${this._cellSize * 0.5} serif`;
             context.textAlign = "center";
             context.clearRect(0, 0, (this._columns * this._cellSize), this._cellSize);
@@ -415,17 +398,11 @@ export class GameLogic implements Logic {
         return false;
     }
 
-    public onCanvasClicked(ev: MouseEvent): void {
-
+    public selectPosition(x: number, y: number): void {
         if (this._state == GameLogicState.Select) {
-
-            const column = Math.floor(ev.offsetX / this._cellSize % this._columns);
-            const row = Math.floor(ev.offsetY / this._cellSize % (this._rows + 1));
+            const column = Math.floor(x / this._cellSize % this._columns);
+            const row = Math.floor(y / this._cellSize % (this._rows + 1));
             const position = new Point(column * this._cellSize, row * this._cellSize);
-
-
-
-
             this.onPositionSelected(position);
         }
     }

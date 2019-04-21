@@ -1,5 +1,5 @@
 import { View } from "./view";
-import { App } from "../app";
+import { Layout } from "../ui/layout";
 
 /**
  * @implements View
@@ -8,12 +8,15 @@ export class HelpView extends View {
     public reset(): void { }
 
     public render(context: CanvasRenderingContext2D): void {
-        context.textAlign = "center";
-        context.fillStyle = "red";
-        context.fillText("Hello", App.dimensions.width * 0.5, App.dimensions.height * 0.5);
+        // context.textAlign = "center";
+        // context.fillStyle = "red";
+        // context.fillText("Hello", App.dimensions.width * 0.5, App.dimensions.height * 0.5);
 
     }
-    public createCells(grid: import("../ui/grid").Grid): void {
+    // public create(container:Container<ViewType>): void {
+
+    // }
+    public createLayout(): Layout | void {
 
     }
     public onShow(): void {
