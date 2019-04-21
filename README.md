@@ -30,6 +30,7 @@ npm build - create production ready public folder.
 npm test - run a jest watch environment for all test files with coverage.
 npm serve - create production ready public folder and start a simple server. Useful for testing service worker locally.
 
+<a href="https://memoryrecall.turboignited.com">Live Demo</a>
 ## Architecture
 This projects loads all assets required by the game, providing a view and reporting on progress.
 In production scenerario, after the user has initially loaded the game they can then play it offline.
