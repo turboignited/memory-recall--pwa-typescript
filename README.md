@@ -1,6 +1,6 @@
 # Memory Recall Game PWA TypeScript
 
-<a href="https://memoryrecall.turboignited.com">Online Demo</a>
+<a href="https://memoryrecall.turboignited.com">Play latest version</a>
 
 ## Introduction
 The project uses barebone web technologies. It combines a canvas context with standard HTML elements that are displayed above any rendering performed on the canvas. There is a single container that is styled as a grid with the canvas and HTML elements as overlapping grid cells.
