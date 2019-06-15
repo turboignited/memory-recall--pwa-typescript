@@ -8,7 +8,7 @@ Most importantly, it supports resizing by scaling the container without disturbi
 
 The game attempts to fit within a mobile screen whilst having a predetermined resolution to aid in design. The game view in this project shows how you can provide separate logic and be informed when the view is created, shown, rendered, hidden, and destroyed which in turn respectively create, start, draw, pause and quit the game.
 
-<img src="images/icon.png"/>
+<img src="public/images/icon.png"/>
 
 ## PWA Architecture
 This projects loads all assets required by the game, providing a view and reporting on progress.
