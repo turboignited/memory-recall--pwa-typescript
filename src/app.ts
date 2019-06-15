@@ -3,41 +3,46 @@ import { Assets } from "./assets/assets";
 import { Loader } from "./utils/loader";
 import { AssetType } from "./assets/asset_type";
 import { ViewType } from "./views/view_type";
+import { Size } from "./utils/size";
 
-/**
- * Entry point.
- */
+export interface IAppConstructorArgs {
+    context: CanvasRenderingContext2D;
+    ui: HTMLDivElement;
+    bar: HTMLDivElement;
+    uiSize: Size;
+    barSize: Size;
+}
+
 export class App {
-    private _views: Views;
+    private static _views: Views;
 
-    public get views(): Views {
+    public static get views(): Views {
         return this._views;
     }
 
-
-    constructor(context: CanvasRenderingContext2D, container: HTMLDivElement) {
+    constructor(args: IAppConstructorArgs) {
         const loader = new Loader<AssetType>();
+        App._views = new Views({
+            ui: args.ui,
+            context: args.context,
+            uiSize: args.uiSize,
+            barSize: args.barSize,
+            bar: args.bar,
+            loader: loader
+        });
+        App._views.setView(ViewType.Load);
 
         loader.setCompletedListener(() => {
             loader.reset();
-            setTimeout(() => {
-                this._views.setView(ViewType.Main);
-
-            }, 0);
+            App._views.setView(ViewType.Main);
         });
 
         loader.setErrorListener(() => {
             loader.reset();
             this.quit(true, "Could not load assets.");
         });
-        const views = new Views(container, context, loader);
-
-
-        views.setView(ViewType.Load);
 
         Assets.load(loader);
-
-        this._views = views;
     }
 
     public quit(error: boolean, reason: string): void {
@@ -46,6 +51,6 @@ export class App {
         } else {
             console.log(`App quitting: $${reason}`)
         }
-        this._views.destroy();
+        App._views.destroy();
     }
 }

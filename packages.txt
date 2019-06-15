@@ -1,0 +1,1 @@
+npm install -D @babel/core @babel/preset-env @babel/preset-typescript @types/jest @types/node @types/puppeteer babel-minify-webpack-plugin html-webpack-plugin http-server jest jest-canvas-mock ts-jest ts-loader typescript webpack webpack-cli webpack-dev-server webpack-merge workbox-webpack-plugin

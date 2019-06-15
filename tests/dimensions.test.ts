@@ -4,7 +4,7 @@ import { Dimensions } from "../src/utils/dimensions";
 
 var dimensions: Dimensions;
 beforeAll(() => {
-    dimensions = new Dimensions(720, 1280, window.innerWidth, window.innerHeight);
+    dimensions = new Dimensions({ width: 720, height: 1280, maximumWidth: window.innerWidth, maximumHeight: window.innerHeight });
 });
 
 describe("updateScale", () => {

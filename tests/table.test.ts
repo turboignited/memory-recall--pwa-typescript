@@ -1,12 +1,16 @@
-import { Table } from "./table";
-import { ParagraphComponent } from "./components";
+import { Table } from "../src/ui/table";
+import { ParagraphComponent } from "../src/ui/components";
 
 
 const getRandomHTMLElement = (text?: string) => {
     return ParagraphComponent(text ? text : Math.random().toString());
 }
 
-const createTable = (heading1?: string, heading2?: string): Table => { return new Table([getRandomHTMLElement(heading1), getRandomHTMLElement(heading2)]); }
+const createTable = (heading1?: string, heading2?: string): Table => {
+    return new Table({
+        headings: [getRandomHTMLElement(heading1), getRandomHTMLElement(heading2)]
+    });
+}
 
 
 describe("construction", () => {

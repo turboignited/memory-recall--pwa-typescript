@@ -8,7 +8,7 @@ module.exports = merge(common, {
     devServer: {
         contentBase: path.resolve(__dirname, "public"),
 
-        // host: "192.168.1.76",
+        // host: "192.168.1.77",
         // port: 80
     }
 });

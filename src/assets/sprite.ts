@@ -1,10 +1,13 @@
 import { Point } from "../utils/point";
 
+export interface SpriteConstructorArgs {
+    image: HTMLImageElement;
+}
+
 export class Sprite {
 
     private _image: HTMLImageElement;
     private _alpha: number = 0;
-    public position: Point;
     public get alpha(): number {
         return this._alpha;
     }
@@ -15,8 +18,7 @@ export class Sprite {
         return this._image;
     }
 
-    constructor(image: HTMLImageElement, position: Point) {
-        this._image = image;
-        this.position = position;
+    constructor(args: SpriteConstructorArgs) {
+        this._image = args.image;
     }
 }

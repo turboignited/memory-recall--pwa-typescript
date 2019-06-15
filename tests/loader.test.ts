@@ -1,4 +1,4 @@
-import { Loader, LoadStatus, LoadProgress } from "../src/utils/loader";
+import { Loader, ILoadStatus, ILoadProgressArgs } from "../src/utils/loader";
 
 describe("add", () => {
     test("should store name and number in loading map", () => {
@@ -88,11 +88,11 @@ describe("load", () => {
     test("should call progress handler when called", (done: jest.DoneCallback) => {
         const loader = new Loader<string>();
         let remaining = 10;
-        const callback = (name: string, status: LoadStatus) => {
+        const callback = (args: ILoadProgressArgs<string>) => {
             expect(name).toEqual(name);
-            expect(status.remaining).toEqual(remaining);
-            expect(status.total).toEqual(10);
-            expect(status.error).toBeFalsy();
+            expect(args.status.remaining).toEqual(remaining);
+            expect(args.status.total).toEqual(10);
+            expect(args.status.error).toBeFalsy();
             if (remaining == 0) {
                 done();
             }
@@ -109,7 +109,7 @@ describe("load", () => {
 describe("setProgressListener", () => {
     test("should store callback function", () => {
         const loader = new Loader<string>();
-        loader.setProgressListener((name: string, status: LoadStatus) => { });
+        loader.setProgressListener((args: ILoadProgressArgs<string>) => { });
         expect(loader.progressListener).not.toBeNull();
     });
 });
@@ -150,11 +150,11 @@ describe("onError", () => {
 describe("onProgress", () => {
     test("should inform progress listener", (done: jest.DoneCallback) => {
         const loader = new Loader<string>();
-        const callback = (name: string, status: LoadStatus) => {
+        const callback = (args: ILoadProgressArgs<string>) => {
             expect(name).toEqual("Hello");
-            expect(status.error).toBeFalsy();
-            expect(status.total).toEqual(10);
-            expect(status.remaining).toEqual(10);
+            expect(args.status.error).toBeFalsy();
+            expect(args.status.total).toEqual(10);
+            expect(args.status.remaining).toEqual(10);
             done();
         }
         loader.setProgressListener(callback);

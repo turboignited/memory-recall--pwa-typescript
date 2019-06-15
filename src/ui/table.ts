@@ -1,6 +1,10 @@
 import { TableComponent } from "./components";
 import { Colours } from "../utils/colours";
 
+export interface ITableConstructorArgs {
+    headings: HTMLElement[];
+}
+
 export class Table {
     private _tableElement: HTMLTableElement;
     private _highlightedRow: number | undefined;
@@ -11,14 +15,14 @@ export class Table {
         return this._highlightedRow;
     }
 
-    constructor(headings: HTMLElement[]) {
+    constructor(args: ITableConstructorArgs) {
         const table = TableComponent();
         const row = table.insertRow();
-        for (let i = 0; i < headings.length; i++) {
+        for (let i = 0; i < args.headings.length; i++) {
             const cell = row.insertCell(i);
             cell.style.backgroundColor = Colours.Primary;
             cell.style.border = `2px solid ${Colours.PrimaryLight}`;
-            cell.appendChild(headings[i]);
+            cell.appendChild(args.headings[i]);
         }
         this._tableElement = table;
     }

@@ -1,5 +1,7 @@
 import { View } from "./view";
-import { Layout } from "../ui/layout";
+import { Grid } from "../ui/grid";
+import { Bar } from "../ui/bar";
+import { Size } from "../utils/size";
 
 /**
  * @implements View
@@ -7,25 +9,20 @@ import { Layout } from "../ui/layout";
 export class HelpView extends View {
     public reset(): void { }
 
-    public render(context: CanvasRenderingContext2D): void {
-        // context.textAlign = "center";
-        // context.fillStyle = "red";
-        // context.fillText("Hello", App.dimensions.width * 0.5, App.dimensions.height * 0.5);
+    public render(context: CanvasRenderingContext2D, size: Size): void {
+    }
+    public populateBar(bar: Bar): void { }
+
+    public populateGrid(grid: Grid): void {
 
     }
-    // public create(container:Container<ViewType>): void {
-
-    // }
-    public createLayout(): Layout | void {
+    public show(): void {
 
     }
-    public onShow(): void {
+    public hide(): void {
 
     }
-    public onHide(): void {
-
-    }
-    public onDestroy(): void {
+    public destroy(): void {
 
     }
 }

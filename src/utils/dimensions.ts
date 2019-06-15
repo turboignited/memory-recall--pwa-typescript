@@ -1,6 +1,13 @@
 import { Point } from "./point";
 import { Maths } from "./maths";
 
+export interface IDimensionsConstructorArgs {
+    width: number;
+    height: number;
+    maximumWidth: number;
+    maximumHeight: number;
+}
+
 export class Dimensions {
     private _width: number;
     private _height: number;
@@ -20,15 +27,18 @@ export class Dimensions {
         return this._scale;
     }
 
-    constructor(width: number, height: number, maxWidth: number, maxHeight: number) {
-        this._width = width;
-        this._height = height;
-        this._scale = Math.min(maxWidth / width, maxHeight / height);
-        this._gcd = Maths.GreatestCommonDivisor(width, height);
+    constructor(args: IDimensionsConstructorArgs) {
+        const scale = Math.min(args.maximumWidth / args.width, args.maximumHeight / args.height);
+        const gcd = Maths.GreatestCommonDivisor(args.width, args.height);
+        this._height = args.height;
+        this._width = args.width;
+        this._gcd = gcd;
+        this._scale = scale;
     }
 
-    public updateScale(maxWidth: number, maxHeight: number): void {
+    public updateScale(maxWidth: number, maxHeight: number): number {
         this._scale = Math.min(maxWidth / this._width, maxHeight / this._height);
+        return this._scale;
     }
 
     public centerPoint(): Point {

@@ -1,14 +1,17 @@
-
-
-export declare type LoadProgress<T> = (name: T, status: LoadStatus) => void;
-export interface LoadStatus {
+export declare type LoadProgress<T> = (args: ILoadProgressArgs<T>) => void;
+export interface ILoadProgressArgs<T> {
+    name: T;
+    status: ILoadStatus;
+    percent: number;
+}
+export interface ILoadStatus {
     total: number;
     remaining: number;
     error: boolean;
 }
 
 export class Loader<T> {
-    private _loading: Map<T, LoadStatus>;
+    private _loading: Map<T, ILoadStatus>;
     private _progressListener: LoadProgress<T> | undefined;
     private _completedListener: Function | undefined;
     private _errorListener: Function | undefined;
@@ -40,7 +43,7 @@ export class Loader<T> {
         return this._errorListener;
     }
 
-    public get loading(): Map<T, LoadStatus> {
+    public get loading(): Map<T, ILoadStatus> {
         return this._loading;
     }
 
@@ -57,7 +60,7 @@ export class Loader<T> {
     }
 
     constructor() {
-        this._loading = new Map<T, LoadStatus>();
+        this._loading = new Map<T, ILoadStatus>();
         this._total = 0;
         this._loaded = 0;
 
@@ -69,10 +72,10 @@ export class Loader<T> {
             if (loading != undefined) {
                 const remaining = loading.remaining - 1;
                 if (remaining >= 0) {
-                    const status: LoadStatus = {
+                    const status: ILoadStatus = {
                         remaining: remaining,
                         total: loading.total,
-                        error: false
+                        error: false,
                     };
                     this._loading.set(key, status);
                     this._loaded++;
@@ -86,9 +89,13 @@ export class Loader<T> {
         }
         return 0;
     }
-    public onProgress(key: T, status: LoadStatus): void {
+    public onProgress(key: T, status: ILoadStatus): void {
         if (this._progressListener) {
-            this._progressListener(key, status);
+            this._progressListener({
+                name: key,
+                percent: this.percent,
+                status: status
+            });
         }
     }
 
@@ -104,15 +111,17 @@ export class Loader<T> {
         }
     }
 
-    public error(key: T): void {
+    public error(key: T, force: boolean = false): void {
         const loading = this._loading.get(key);
         if (loading != undefined) {
-            const status: LoadStatus = {
+            const status: ILoadStatus = {
                 remaining: loading.remaining,
                 total: loading.total,
                 error: true
             };
             this._loading.set(key, status);
+            this.onError();
+        } else if (force) {
             this.onError();
         }
     }

@@ -24,4 +24,12 @@ export class LocalStorage {
             throw e;
         }
     }
+
+    public static clearAll(): void {
+        try {
+            localStorage.clear();
+        } catch (e) {
+            throw e;
+        }
+    }
 }

@@ -1,7 +1,6 @@
 import { GameState } from "./game_state";
-import { Sprite } from "../assets/sprite";
 import { GameLogic } from "./game_logic";
-export interface GameConstructorArgs {
+export interface IGameConstructorArgs {
     logic: GameLogic;
 }
 export class Game {
@@ -21,8 +20,7 @@ export class Game {
         return this._animationFrame;
     }
 
-
-    constructor(args: GameConstructorArgs) {
+    constructor(args: IGameConstructorArgs) {
         this._state = GameState.None;
         this._animationFrame = 0;
         this._logic = args.logic;
@@ -32,17 +30,17 @@ export class Game {
         if (this._state == GameState.Playing) {
             this._logic.update();
             this._logic.render(context);
-            this._animationFrame = requestAnimationFrame((time: number) => {
+            this._animationFrame = requestAnimationFrame(() => {
                 this.render(context);
             });
         }
     }
 
-    public start(sprites: Sprite[]): boolean {
+    public start(): boolean {
         if (this._state != GameState.None) {
             return false;
         }
-        this._logic.initialize(sprites);
+        this._logic.initialize();
         this._state = GameState.Playing;
         return true;
     }
@@ -68,7 +66,7 @@ export class Game {
         if (this._state == GameState.Paused) {
             cancelAnimationFrame(this._animationFrame);
             this._animationFrame = 0;
-            this._logic.restart();
+            this._logic.reset();
             this._state = GameState.Playing;
             return true;
         }
@@ -79,7 +77,7 @@ export class Game {
         this._state = GameState.None;
         cancelAnimationFrame(this._animationFrame);
         this._animationFrame = 0;
-        this._logic.cancel();
+        this._logic.quit();
         return true;
     }
 }

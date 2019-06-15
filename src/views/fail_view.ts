@@ -1,9 +1,11 @@
 import { View } from "./view";
-import { Layout } from "../ui/layout";
-import { GridLayout } from "../ui/grid_layout";
-import { ContainerComponent, ButtonComponent } from "../ui/components";
+import { DivComponent, ButtonComponent, ParagraphComponent, ButtonImageComponent, ImageComponent } from "../ui/components";
 import { Colours } from "../utils/colours";
 import { ViewType } from "./view_type";
+import { App } from "../app";
+import { Grid } from "../ui/grid";
+import { Bar } from "../ui/bar";
+import { Size } from "../utils/size";
 /**
  * @implements View
  */
@@ -11,16 +13,17 @@ export class FailView extends View {
     public reset(): void {
 
     }
-    public render(context: CanvasRenderingContext2D): void {
+    public render(context: CanvasRenderingContext2D, size: Size): void {
 
     }
+    public populateBar(bar: Bar): void { }
 
-    public createLayout(): Layout | void {
-        const grid = new GridLayout();
-        const container = ContainerComponent();
-        container.style.backgroundColor=Colours.PrimaryLight;
+    public populateGrid(grid: Grid): void {
 
-        grid.add({
+        const container = DivComponent();
+        container.style.backgroundColor = Colours.PrimaryLight;
+
+        grid.addCell({
             element: container,
             column: 3,
             row: 5,
@@ -28,35 +31,46 @@ export class FailView extends View {
             columnSpan: 5
         })
 
-        grid.add({
+        grid.addCell({
             column: 4,
             row: 8,
             columnSpan: 3,
-            element: ButtonComponent("Retry", Colours.Secondary, () => {
-                View.views.resetView(ViewType.Game);
-                View.views.setView(ViewType.Game);
+            element: ButtonImageComponent({
+                image: ImageComponent({
+                    src: "images/replay.png",
+                    alt: "Retry"
+                }),
+                onClick: () => {
+                    App.views.resetView(ViewType.Game);
+                    App.views.setView(ViewType.Game);
+                }
             })
         });
 
-        grid.add({
+        grid.addCell({
             column: 4,
             row: 10,
             columnSpan: 3,
-            element: ButtonComponent("Exit", Colours.Red, () => {
-                View.views.destroyView(ViewType.Game);
-                View.views.setView(ViewType.Main);
+            element: ButtonImageComponent({
+                image: ImageComponent({
+                    src: "images/quit.png",
+                    alt: "Quit"
+                }),
+                onClick: () => {
+                    App.views.destroyView(ViewType.Game);
+                    App.views.setView(ViewType.Main);
+                }
             })
         });
-        return grid;
     }
 
-    public onShow(): void {
+    public show(): void {
 
     }
-    public onHide(): void {
+    public hide(): void {
 
     }
-    public onDestroy(): void {
+    public destroy(): void {
 
     }
 }

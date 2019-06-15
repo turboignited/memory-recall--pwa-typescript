@@ -1,4 +1,4 @@
-export const enum GameLogicState {
+export const enum MemoryRecallState {
     None,
     Reveal,
     Select,

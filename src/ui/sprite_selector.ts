@@ -1,11 +1,15 @@
 import { SpriteTypes } from "../assets/sprite_types";
 import { Assets } from "../assets/assets";
-import { Selector, Selection, SelectionCallback } from "./selector";
+import { Selector, ISelection, SelectionCallback } from "./selector";
 import { Preferences } from "../storage/preferences";
+
+export interface ISpriteSelectorConstructorArgs {
+    selectionCallback: SelectionCallback;
+}
 export class SpriteSelector extends Selector {
 
-    constructor(selectionCallback: SelectionCallback) {
-        const spriteSelections: Selection[] = [];
+    constructor(args: ISpriteSelectorConstructorArgs) {
+        const spriteSelections: ISelection[] = [];
         let titles: string[] = [];
         let elements: HTMLElement[] = [];
         Object.values(SpriteTypes).map((value: string) => {
@@ -22,10 +26,11 @@ export class SpriteSelector extends Selector {
                 element: elements[i]
             });
         }
-        super(
-            spriteSelections,
-            selectionCallback,
-            Preferences.activeSprite
-        )
+
+        super({
+            callback: args.selectionCallback,
+            selected: Preferences.activeSprite,
+            selections: spriteSelections
+        });
     }
 }

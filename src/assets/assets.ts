@@ -9,6 +9,10 @@ export class Assets {
     }
 
     public static load(loader: Loader<AssetType>): void {
-        this._sprites = new Sprites(loader);
+        if (!this._sprites) {
+            this._sprites = new Sprites({ loader });
+        }else{
+            loader.onCompleted();
+        }
     }
 }

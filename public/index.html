@@ -11,11 +11,43 @@
 </head>
 
 <body style="margin: 0;
-padding: 0;
-width:100vw;
-height:100vh;
-text-align: center;
-background: linear-gradient(0deg,#4CCC14,#141ECC);">
+font-size: 2rem;
+padding: 0; 
+text-align:center;
+background-color: rgba(76, 217, 99, 0.24);
+overflow: hidden;">
+    <!-- Used to contain canvas and views ui -->
+    <div id="container" style="display: grid; 
+    grid-template-columns: 1fr; 
+    grid-template-rows: 1fr;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr;
+    justify-content: center;
+    margin: 0 auto;">
+        <!-- Canvas width and height used to determine overall app resolution,
+        ensure width and height have a GCD that provides enough space for each ui element -->
+        <canvas width="720" height="1280" style="grid-row: 1;
+        grid-column: 1;
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        margin: 0 auto;
+        z-index: 0;">
+            <p>Cannot get a 2d canvas context. Cannot continue.</p>
+        </canvas>
+        <!-- Used to hold views ui -->
+        <div style="user-select: none;
+        -ms-user-select: none;
+        -ms-touch-select: none;
+        -webkit-user-select: none;
+        cursor: default;
+        grid-row: 1;
+        grid-column: 1;
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        margin: 0 auto;
+        z-index: 1;">
+        </div>
+    </div>
     <noscript>
         <p>JavaScript was found to be disabled. This web app requires JavaScript to function. Please consider enabling
             it.</p>

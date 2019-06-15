@@ -1,27 +1,23 @@
-import { ButtonComponent, ContainerComponent, Heading2Component } from "./components";
-import { Colours } from "../utils/colours";
+import { DivComponent, Heading2Component } from "./components";
 
-export interface Selection {
+export interface ISelection {
     element: HTMLElement;
-    title: string
+    title: string;
+}
+export interface ISelectorConstructorArgs {
+    selections: ISelection[];
+    callback: SelectionCallback;
+    selected: number;
 }
 
 export declare type SelectionCallback = (index: number) => void;
 export class Selector {
-    private _leftButton: HTMLButtonElement;
-    private _rightButton: HTMLButtonElement;
     private _titleHeading: HTMLHeadingElement;
     private _selectionContainer: HTMLDivElement;
-    private _selections: Selection[];
+    private _selections: ISelection[];
     private _selected: number = 0;
     private _callback: SelectionCallback;
-    public get leftButton(): HTMLButtonElement {
-        return this._leftButton;
-    }
 
-    public get rightButton(): HTMLButtonElement {
-        return this._rightButton;
-    }
     public get titleHeading(): HTMLHeadingElement {
         return this._titleHeading;
     }
@@ -33,7 +29,7 @@ export class Selector {
         return this._selected;
     }
 
-    public get selections(): Selection[] {
+    public get selections(): ISelection[] {
         return this._selections;
     }
 
@@ -41,22 +37,12 @@ export class Selector {
         return this._callback;
     }
 
-    constructor(selections: Selection[], callback: SelectionCallback, selected: number) {
-        const leftButton = ButtonComponent("<", Colours.Secondary, () => {
-            this.selectPrevious();
-        });
-        const rightButton = ButtonComponent(">", Colours.Secondary, () => {
-            this.selectNext();
-        });
-        this._leftButton = leftButton;
-        this._rightButton = rightButton;
-        this._selectionContainer = ContainerComponent();
-        this._selectionContainer.style.width = "80px";
-        this._selectionContainer.style.height = "80px";
-        this._selections = selections;
-        this._titleHeading = Heading2Component("");
-        this._callback = callback;
-        this.select(selected);
+    constructor(args: ISelectorConstructorArgs) {
+        this._selectionContainer = DivComponent();
+        this._selections = args.selections;
+        this._titleHeading = Heading2Component({ text: "" });
+        this._callback = args.callback;
+        this.select(args.selected);
     }
 
     public selectPrevious(): void {
@@ -97,17 +83,7 @@ export class Selector {
         } else {
             this._selectionContainer.appendChild(selection.element);
         }
-        selection.element.animate([
-            { // from
-                transform: `scale(0.5)`
-            },
-            { // to
-                transform: `scale(1.2)`
-            },
-            { // to
-                transform: `scale(1.0)`
-            }
-        ], 200);
+
         this._selected = index;
 
         this._callback(index);
